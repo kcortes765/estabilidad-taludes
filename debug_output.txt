@@ -291,9 +291,10 @@ DEBUG:   Llamando calcular_presion_poros(x_centro=33.70, altura=6.36, ...)
 DEBUG:     Presión de poros calculada: 0.00
 DEBUG:   Dovela 9 CREADA con éxito.
 DEBUG: --- Finalizando crear_dovelas: 10 dovelas creadas ---
-   ❌ Error Fellenius: Momento actuante ≤ 0: superficie de falla inválida
    ✅ Bishop: FS = 7.686 (esperado: 1.25, error: 514.9%)
-   ❌ Fellenius: FALLO
+   ✅ Fellenius: FS = 4.881 (esperado: 1.15, error: 324.5%)
+   📊 Diferencia Bishop-Fellenius: 36.5% (esperado: 5-15%)
+   ⚠️ Diferencia fuera del rango esperado
 
 ================================================================================
 📊 REPORTE DE VALIDACIÓN (SOLO DEBUG)
@@ -302,6 +303,6 @@ DEBUG: --- Finalizando crear_dovelas: 10 dovelas creadas ---
    Bishop: 0/1 caso válido (0.0%)
      FS: 7.686, Esperado: 1.25, Error: 514.9%
    Fellenius: 0/1 caso válido (0.0%)
-     FS: N/A, Esperado: 1.15
+     FS: 4.881, Esperado: 1.15, Error: 324.5%
 
 ⚠️ VALIDACIÓN DEL CASO FALLIDA (DEBUG)
