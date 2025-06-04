@@ -1,0 +1,307 @@
+🏛️ VALIDACIÓN DE CASOS DE LITERATURA ADAPTADOS
+================================================================================
+📚 Casos basados en literatura clásica pero adaptados para compatibilidad técnica
+
+📖 VALIDANDO (SOLO DEBUG): Caso Crítico Realista (basado en Bishop 1955)
+   Adaptación del caso clásico de Bishop con geometría compatible
+   Perfil: [(0, 12), (25, 8), (40, 0)]
+   Círculo: Centro=(22, 2.67), Radio=13
+   Suelo: c=15kPa, φ=20°, γ=19kN/m³
+
+--- DEBUG: Iniciando crear_dovelas ---
+DEBUG: Círculo: Centro=(22, 2.67), Radio=13
+DEBUG: Perfil: [(0, 12), (25, 8), (40, 0)]
+DEBUG: Estrato: c=15, φ=20, γ=19
+DEBUG: Num Dovelas: 10
+DEBUG: Nivel Freático: No
+DEBUG: Rango X absoluto del círculo: [9.00, 35.00]
+DEBUG: Rango X del perfil: [0.00, 40.00]
+DEBUG: Rango X efectivo para dovelas: [9.00, 35.00]
+DEBUG: Ancho de cada dovela: 2.60
+
+DEBUG: Intentando crear dovela 0 en X_centro = 10.30
+DEBUG:   Llamando calcular_altura_dovela(x_centro=10.30, ancho_dovela=2.60, ...)
+DEBUG:     Altura calculada: 13.35
+DEBUG:   Llamando calcular_angulo_alpha(x_centro=10.30, ...)
+DEBUG:     Ángulo α calculado: -1.12°
+DEBUG:   Llamando calcular_longitud_arco(x_izq=9.00, x_der=11.60, ...)
+DEBUG:     Longitud de arco calculada: 8.37
+DEBUG:   Llamando calcular_peso_dovela(altura=13.35, ancho_dovela=2.60, gamma=19)
+DEBUG:     Peso calculado: 659.42
+DEBUG:   Llamando calcular_presion_poros(x_centro=10.30, altura=13.35, ...)
+DEBUG:     Presión de poros calculada: 0.00
+DEBUG:   Dovela 0 CREADA con éxito.
+
+DEBUG: Intentando crear dovela 1 en X_centro = 12.90
+DEBUG:   Llamando calcular_altura_dovela(x_centro=12.90, ancho_dovela=2.60, ...)
+DEBUG:     Altura calculada: 16.55
+DEBUG:   Llamando calcular_angulo_alpha(x_centro=12.90, ...)
+DEBUG:     Ángulo α calculado: -0.78°
+DEBUG:   Llamando calcular_longitud_arco(x_izq=11.60, x_der=14.20, ...)
+DEBUG:     Longitud de arco calculada: 3.69
+DEBUG:   Llamando calcular_peso_dovela(altura=16.55, ancho_dovela=2.60, gamma=19)
+DEBUG:     Peso calculado: 817.56
+DEBUG:   Llamando calcular_presion_poros(x_centro=12.90, altura=16.55, ...)
+DEBUG:     Presión de poros calculada: 0.00
+DEBUG:   Dovela 1 CREADA con éxito.
+
+DEBUG: Intentando crear dovela 2 en X_centro = 15.50
+DEBUG:   Llamando calcular_altura_dovela(x_centro=15.50, ancho_dovela=2.60, ...)
+DEBUG:     Altura calculada: 18.11
+DEBUG:   Llamando calcular_angulo_alpha(x_centro=15.50, ...)
+DEBUG:     Ángulo α calculado: -0.52°
+DEBUG:   Llamando calcular_longitud_arco(x_izq=14.20, x_der=16.80, ...)
+DEBUG:     Longitud de arco calculada: 3.02
+DEBUG:   Llamando calcular_peso_dovela(altura=18.11, ancho_dovela=2.60, gamma=19)
+DEBUG:     Peso calculado: 894.55
+DEBUG:   Llamando calcular_presion_poros(x_centro=15.50, altura=18.11, ...)
+DEBUG:     Presión de poros calculada: 0.00
+DEBUG:   Dovela 2 CREADA con éxito.
+
+DEBUG: Intentando crear dovela 3 en X_centro = 18.10
+DEBUG:   Llamando calcular_altura_dovela(x_centro=18.10, ancho_dovela=2.60, ...)
+DEBUG:     Altura calculada: 18.84
+DEBUG:   Llamando calcular_angulo_alpha(x_centro=18.10, ...)
+DEBUG:     Ángulo α calculado: -0.30°
+DEBUG:   Llamando calcular_longitud_arco(x_izq=16.80, x_der=19.40, ...)
+DEBUG:     Longitud de arco calculada: 2.73
+DEBUG:   Llamando calcular_peso_dovela(altura=18.84, ancho_dovela=2.60, gamma=19)
+DEBUG:     Peso calculado: 930.46
+DEBUG:   Llamando calcular_presion_poros(x_centro=18.10, altura=18.84, ...)
+DEBUG:     Presión de poros calculada: 0.00
+DEBUG:   Dovela 3 CREADA con éxito.
+
+DEBUG: Intentando crear dovela 4 en X_centro = 20.70
+DEBUG:   Llamando calcular_altura_dovela(x_centro=20.70, ancho_dovela=2.60, ...)
+DEBUG:     Altura calculada: 18.95
+DEBUG:   Llamando calcular_angulo_alpha(x_centro=20.70, ...)
+DEBUG:     Ángulo α calculado: -0.10°
+DEBUG:   Llamando calcular_longitud_arco(x_izq=19.40, x_der=22.00, ...)
+DEBUG:     Longitud de arco calculada: 2.62
+DEBUG:   Llamando calcular_peso_dovela(altura=18.95, ancho_dovela=2.60, gamma=19)
+DEBUG:     Peso calculado: 936.27
+DEBUG:   Llamando calcular_presion_poros(x_centro=20.70, altura=18.95, ...)
+DEBUG:     Presión de poros calculada: 0.00
+DEBUG:   Dovela 4 CREADA con éxito.
+
+DEBUG: Intentando crear dovela 5 en X_centro = 23.30
+DEBUG:   Llamando calcular_altura_dovela(x_centro=23.30, ancho_dovela=2.60, ...)
+DEBUG:     Altura calculada: 18.54
+DEBUG:   Llamando calcular_angulo_alpha(x_centro=23.30, ...)
+DEBUG:     Ángulo α calculado: 0.10°
+DEBUG:   Llamando calcular_longitud_arco(x_izq=22.00, x_der=24.60, ...)
+DEBUG:     Longitud de arco calculada: 2.62
+DEBUG:   Llamando calcular_peso_dovela(altura=18.54, ancho_dovela=2.60, gamma=19)
+DEBUG:     Peso calculado: 915.72
+DEBUG:   Llamando calcular_presion_poros(x_centro=23.30, altura=18.54, ...)
+DEBUG:     Presión de poros calculada: 0.00
+DEBUG:   Dovela 5 CREADA con éxito.
+
+DEBUG: Intentando crear dovela 6 en X_centro = 25.90
+DEBUG:   Llamando calcular_altura_dovela(x_centro=25.90, ancho_dovela=2.60, ...)
+DEBUG:     Altura calculada: 17.25
+DEBUG:   Llamando calcular_angulo_alpha(x_centro=25.90, ...)
+DEBUG:     Ángulo α calculado: 0.30°
+DEBUG:   Llamando calcular_longitud_arco(x_izq=24.60, x_der=27.20, ...)
+DEBUG:     Longitud de arco calculada: 2.73
+DEBUG:   Llamando calcular_peso_dovela(altura=17.25, ancho_dovela=2.60, gamma=19)
+DEBUG:     Peso calculado: 852.21
+DEBUG:   Llamando calcular_presion_poros(x_centro=25.90, altura=17.25, ...)
+DEBUG:     Presión de poros calculada: 0.00
+DEBUG:   Dovela 6 CREADA con éxito.
+
+DEBUG: Intentando crear dovela 7 en X_centro = 28.50
+DEBUG:   Llamando calcular_altura_dovela(x_centro=28.50, ancho_dovela=2.60, ...)
+DEBUG:     Altura calculada: 14.72
+DEBUG:   Llamando calcular_angulo_alpha(x_centro=28.50, ...)
+DEBUG:     Ángulo α calculado: 0.52°
+DEBUG:   Llamando calcular_longitud_arco(x_izq=27.20, x_der=29.80, ...)
+DEBUG:     Longitud de arco calculada: 3.02
+DEBUG:   Llamando calcular_peso_dovela(altura=14.72, ancho_dovela=2.60, gamma=19)
+DEBUG:     Peso calculado: 727.25
+DEBUG:   Llamando calcular_presion_poros(x_centro=28.50, altura=14.72, ...)
+DEBUG:     Presión de poros calculada: 0.00
+DEBUG:   Dovela 7 CREADA con éxito.
+
+DEBUG: Intentando crear dovela 8 en X_centro = 31.10
+DEBUG:   Llamando calcular_altura_dovela(x_centro=31.10, ancho_dovela=2.60, ...)
+DEBUG:     Altura calculada: 11.36
+DEBUG:   Llamando calcular_angulo_alpha(x_centro=31.10, ...)
+DEBUG:     Ángulo α calculado: 0.78°
+DEBUG:   Llamando calcular_longitud_arco(x_izq=29.80, x_der=32.40, ...)
+DEBUG:     Longitud de arco calculada: 3.69
+DEBUG:   Llamando calcular_peso_dovela(altura=11.36, ancho_dovela=2.60, gamma=19)
+DEBUG:     Peso calculado: 561.21
+DEBUG:   Llamando calcular_presion_poros(x_centro=31.10, altura=11.36, ...)
+DEBUG:     Presión de poros calculada: 0.00
+DEBUG:   Dovela 8 CREADA con éxito.
+
+DEBUG: Intentando crear dovela 9 en X_centro = 33.70
+DEBUG:   Llamando calcular_altura_dovela(x_centro=33.70, ancho_dovela=2.60, ...)
+DEBUG:     Altura calculada: 6.36
+DEBUG:   Llamando calcular_angulo_alpha(x_centro=33.70, ...)
+DEBUG:     Ángulo α calculado: 1.12°
+DEBUG:   Llamando calcular_longitud_arco(x_izq=32.40, x_der=35.00, ...)
+DEBUG:     Longitud de arco calculada: 8.37
+DEBUG:   Llamando calcular_peso_dovela(altura=6.36, ancho_dovela=2.60, gamma=19)
+DEBUG:     Peso calculado: 314.01
+DEBUG:   Llamando calcular_presion_poros(x_centro=33.70, altura=6.36, ...)
+DEBUG:     Presión de poros calculada: 0.00
+DEBUG:   Dovela 9 CREADA con éxito.
+DEBUG: --- Finalizando crear_dovelas: 10 dovelas creadas ---
+
+--- DEBUG: Iniciando crear_dovelas ---
+DEBUG: Círculo: Centro=(22, 2.67), Radio=13
+DEBUG: Perfil: [(0, 12), (25, 8), (40, 0)]
+DEBUG: Estrato: c=15, φ=20, γ=19
+DEBUG: Num Dovelas: 10
+DEBUG: Nivel Freático: No
+DEBUG: Rango X absoluto del círculo: [9.00, 35.00]
+DEBUG: Rango X del perfil: [0.00, 40.00]
+DEBUG: Rango X efectivo para dovelas: [9.00, 35.00]
+DEBUG: Ancho de cada dovela: 2.60
+
+DEBUG: Intentando crear dovela 0 en X_centro = 10.30
+DEBUG:   Llamando calcular_altura_dovela(x_centro=10.30, ancho_dovela=2.60, ...)
+DEBUG:     Altura calculada: 13.35
+DEBUG:   Llamando calcular_angulo_alpha(x_centro=10.30, ...)
+DEBUG:     Ángulo α calculado: -1.12°
+DEBUG:   Llamando calcular_longitud_arco(x_izq=9.00, x_der=11.60, ...)
+DEBUG:     Longitud de arco calculada: 8.37
+DEBUG:   Llamando calcular_peso_dovela(altura=13.35, ancho_dovela=2.60, gamma=19)
+DEBUG:     Peso calculado: 659.42
+DEBUG:   Llamando calcular_presion_poros(x_centro=10.30, altura=13.35, ...)
+DEBUG:     Presión de poros calculada: 0.00
+DEBUG:   Dovela 0 CREADA con éxito.
+
+DEBUG: Intentando crear dovela 1 en X_centro = 12.90
+DEBUG:   Llamando calcular_altura_dovela(x_centro=12.90, ancho_dovela=2.60, ...)
+DEBUG:     Altura calculada: 16.55
+DEBUG:   Llamando calcular_angulo_alpha(x_centro=12.90, ...)
+DEBUG:     Ángulo α calculado: -0.78°
+DEBUG:   Llamando calcular_longitud_arco(x_izq=11.60, x_der=14.20, ...)
+DEBUG:     Longitud de arco calculada: 3.69
+DEBUG:   Llamando calcular_peso_dovela(altura=16.55, ancho_dovela=2.60, gamma=19)
+DEBUG:     Peso calculado: 817.56
+DEBUG:   Llamando calcular_presion_poros(x_centro=12.90, altura=16.55, ...)
+DEBUG:     Presión de poros calculada: 0.00
+DEBUG:   Dovela 1 CREADA con éxito.
+
+DEBUG: Intentando crear dovela 2 en X_centro = 15.50
+DEBUG:   Llamando calcular_altura_dovela(x_centro=15.50, ancho_dovela=2.60, ...)
+DEBUG:     Altura calculada: 18.11
+DEBUG:   Llamando calcular_angulo_alpha(x_centro=15.50, ...)
+DEBUG:     Ángulo α calculado: -0.52°
+DEBUG:   Llamando calcular_longitud_arco(x_izq=14.20, x_der=16.80, ...)
+DEBUG:     Longitud de arco calculada: 3.02
+DEBUG:   Llamando calcular_peso_dovela(altura=18.11, ancho_dovela=2.60, gamma=19)
+DEBUG:     Peso calculado: 894.55
+DEBUG:   Llamando calcular_presion_poros(x_centro=15.50, altura=18.11, ...)
+DEBUG:     Presión de poros calculada: 0.00
+DEBUG:   Dovela 2 CREADA con éxito.
+
+DEBUG: Intentando crear dovela 3 en X_centro = 18.10
+DEBUG:   Llamando calcular_altura_dovela(x_centro=18.10, ancho_dovela=2.60, ...)
+DEBUG:     Altura calculada: 18.84
+DEBUG:   Llamando calcular_angulo_alpha(x_centro=18.10, ...)
+DEBUG:     Ángulo α calculado: -0.30°
+DEBUG:   Llamando calcular_longitud_arco(x_izq=16.80, x_der=19.40, ...)
+DEBUG:     Longitud de arco calculada: 2.73
+DEBUG:   Llamando calcular_peso_dovela(altura=18.84, ancho_dovela=2.60, gamma=19)
+DEBUG:     Peso calculado: 930.46
+DEBUG:   Llamando calcular_presion_poros(x_centro=18.10, altura=18.84, ...)
+DEBUG:     Presión de poros calculada: 0.00
+DEBUG:   Dovela 3 CREADA con éxito.
+
+DEBUG: Intentando crear dovela 4 en X_centro = 20.70
+DEBUG:   Llamando calcular_altura_dovela(x_centro=20.70, ancho_dovela=2.60, ...)
+DEBUG:     Altura calculada: 18.95
+DEBUG:   Llamando calcular_angulo_alpha(x_centro=20.70, ...)
+DEBUG:     Ángulo α calculado: -0.10°
+DEBUG:   Llamando calcular_longitud_arco(x_izq=19.40, x_der=22.00, ...)
+DEBUG:     Longitud de arco calculada: 2.62
+DEBUG:   Llamando calcular_peso_dovela(altura=18.95, ancho_dovela=2.60, gamma=19)
+DEBUG:     Peso calculado: 936.27
+DEBUG:   Llamando calcular_presion_poros(x_centro=20.70, altura=18.95, ...)
+DEBUG:     Presión de poros calculada: 0.00
+DEBUG:   Dovela 4 CREADA con éxito.
+
+DEBUG: Intentando crear dovela 5 en X_centro = 23.30
+DEBUG:   Llamando calcular_altura_dovela(x_centro=23.30, ancho_dovela=2.60, ...)
+DEBUG:     Altura calculada: 18.54
+DEBUG:   Llamando calcular_angulo_alpha(x_centro=23.30, ...)
+DEBUG:     Ángulo α calculado: 0.10°
+DEBUG:   Llamando calcular_longitud_arco(x_izq=22.00, x_der=24.60, ...)
+DEBUG:     Longitud de arco calculada: 2.62
+DEBUG:   Llamando calcular_peso_dovela(altura=18.54, ancho_dovela=2.60, gamma=19)
+DEBUG:     Peso calculado: 915.72
+DEBUG:   Llamando calcular_presion_poros(x_centro=23.30, altura=18.54, ...)
+DEBUG:     Presión de poros calculada: 0.00
+DEBUG:   Dovela 5 CREADA con éxito.
+
+DEBUG: Intentando crear dovela 6 en X_centro = 25.90
+DEBUG:   Llamando calcular_altura_dovela(x_centro=25.90, ancho_dovela=2.60, ...)
+DEBUG:     Altura calculada: 17.25
+DEBUG:   Llamando calcular_angulo_alpha(x_centro=25.90, ...)
+DEBUG:     Ángulo α calculado: 0.30°
+DEBUG:   Llamando calcular_longitud_arco(x_izq=24.60, x_der=27.20, ...)
+DEBUG:     Longitud de arco calculada: 2.73
+DEBUG:   Llamando calcular_peso_dovela(altura=17.25, ancho_dovela=2.60, gamma=19)
+DEBUG:     Peso calculado: 852.21
+DEBUG:   Llamando calcular_presion_poros(x_centro=25.90, altura=17.25, ...)
+DEBUG:     Presión de poros calculada: 0.00
+DEBUG:   Dovela 6 CREADA con éxito.
+
+DEBUG: Intentando crear dovela 7 en X_centro = 28.50
+DEBUG:   Llamando calcular_altura_dovela(x_centro=28.50, ancho_dovela=2.60, ...)
+DEBUG:     Altura calculada: 14.72
+DEBUG:   Llamando calcular_angulo_alpha(x_centro=28.50, ...)
+DEBUG:     Ángulo α calculado: 0.52°
+DEBUG:   Llamando calcular_longitud_arco(x_izq=27.20, x_der=29.80, ...)
+DEBUG:     Longitud de arco calculada: 3.02
+DEBUG:   Llamando calcular_peso_dovela(altura=14.72, ancho_dovela=2.60, gamma=19)
+DEBUG:     Peso calculado: 727.25
+DEBUG:   Llamando calcular_presion_poros(x_centro=28.50, altura=14.72, ...)
+DEBUG:     Presión de poros calculada: 0.00
+DEBUG:   Dovela 7 CREADA con éxito.
+
+DEBUG: Intentando crear dovela 8 en X_centro = 31.10
+DEBUG:   Llamando calcular_altura_dovela(x_centro=31.10, ancho_dovela=2.60, ...)
+DEBUG:     Altura calculada: 11.36
+DEBUG:   Llamando calcular_angulo_alpha(x_centro=31.10, ...)
+DEBUG:     Ángulo α calculado: 0.78°
+DEBUG:   Llamando calcular_longitud_arco(x_izq=29.80, x_der=32.40, ...)
+DEBUG:     Longitud de arco calculada: 3.69
+DEBUG:   Llamando calcular_peso_dovela(altura=11.36, ancho_dovela=2.60, gamma=19)
+DEBUG:     Peso calculado: 561.21
+DEBUG:   Llamando calcular_presion_poros(x_centro=31.10, altura=11.36, ...)
+DEBUG:     Presión de poros calculada: 0.00
+DEBUG:   Dovela 8 CREADA con éxito.
+
+DEBUG: Intentando crear dovela 9 en X_centro = 33.70
+DEBUG:   Llamando calcular_altura_dovela(x_centro=33.70, ancho_dovela=2.60, ...)
+DEBUG:     Altura calculada: 6.36
+DEBUG:   Llamando calcular_angulo_alpha(x_centro=33.70, ...)
+DEBUG:     Ángulo α calculado: 1.12°
+DEBUG:   Llamando calcular_longitud_arco(x_izq=32.40, x_der=35.00, ...)
+DEBUG:     Longitud de arco calculada: 8.37
+DEBUG:   Llamando calcular_peso_dovela(altura=6.36, ancho_dovela=2.60, gamma=19)
+DEBUG:     Peso calculado: 314.01
+DEBUG:   Llamando calcular_presion_poros(x_centro=33.70, altura=6.36, ...)
+DEBUG:     Presión de poros calculada: 0.00
+DEBUG:   Dovela 9 CREADA con éxito.
+DEBUG: --- Finalizando crear_dovelas: 10 dovelas creadas ---
+   ❌ Error Fellenius: Momento actuante ≤ 0: superficie de falla inválida
+   ✅ Bishop: FS = 7.686 (esperado: 1.25, error: 514.9%)
+   ❌ Fellenius: FALLO
+
+================================================================================
+📊 REPORTE DE VALIDACIÓN (SOLO DEBUG)
+================================================================================
+📋 RESUMEN PARA: Caso Crítico Realista (basado en Bishop 1955)
+   Bishop: 0/1 caso válido (0.0%)
+     FS: 7.686, Esperado: 1.25, Error: 514.9%
+   Fellenius: 0/1 caso válido (0.0%)
+     FS: N/A, Esperado: 1.15
+
+⚠️ VALIDACIÓN DEL CASO FALLIDA (DEBUG)
