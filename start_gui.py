@@ -50,7 +50,7 @@ def main():
         
         # Crear y ejecutar aplicación
         app = SlopeStabilityApp()
-        app.mainloop()
+        app.root.mainloop()
         
     except KeyboardInterrupt:
         print("\nAplicación interrumpida por el usuario.")
