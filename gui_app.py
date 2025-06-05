@@ -196,7 +196,10 @@ class SlopeStabilityApp:
             
             # Importar clases y funciones necesarias
             from data.models import generar_perfil_simple, CirculoFalla
-            from core.circle_constraints import CalculadorLimites
+            from core.circle_constraints import (
+                aplicar_limites_inteligentes,
+                validar_circulo_geometricamente,
+            )
             from gui_analysis import analizar_desde_gui
 
             # 1. Generar perfil del talud (similar a show_slope_geometry)
@@ -213,28 +216,32 @@ class SlopeStabilityApp:
                 self.progress_bar.set(0)
                 return
 
-            # 2. Calcular límites geométricos basados en el perfil
-            calculador_limites = CalculadorLimites()
+            # 2. Calcular límites geométricos automáticos basados en el perfil
             try:
-                limites_geometricos = calculador_limites.calcular_limites_desde_perfil(perfil_terreno)
+                limites_geometricos = aplicar_limites_inteligentes(
+                    perfil_terreno, "talud_empinado"
+                )
             except Exception as e:
                 self.update_status(f"Error calculando límites geométricos: {e}")
-                messagebox.showerror("Error Interno", f"No se pudo calcular los límites geométricos: {e}")
+                messagebox.showerror(
+                    "Error Interno",
+                    f"No se pudo calcular los límites geométricos: {e}",
+                )
                 self.analysis_running = False
                 self.progress_bar.set(0)
                 return
 
             # 3. Crear objeto CirculoFalla con parámetros de la GUI
-            circulo_actual = CirculoFalla(xc=params['centro_x'], 
-                                        yc=params['centro_y'], 
+            circulo_actual = CirculoFalla(xc=params['centro_x'],
+                                        yc=params['centro_y'],
                                         radio=params['radio'])
 
             # 4. Validar y corregir el círculo
             self.update_status("Validando geometría del círculo...")
-            resultado_validacion = calculador_limites.validar_y_corregir_circulo(
-                circulo_actual, 
-                limites_geometricos, 
-                corregir_automaticamente=True
+            resultado_validacion = validar_circulo_geometricamente(
+                circulo_actual,
+                limites_geometricos,
+                corregir_automaticamente=True,
             )
 
             if not resultado_validacion.es_valido:
