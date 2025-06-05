@@ -8,6 +8,7 @@ correctamente con parámetros típicos de ingeniería geotécnica.
 import sys
 import os
 import math
+import pytest
 
 # Agregar el directorio padre al path para importar los módulos
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -127,6 +128,55 @@ def test_dovela_basica():
     assert fuerza_actuante > 0
     
     print("✅ Test dovela básica PASADO\n")
+
+
+def test_dovela_valores_invalidos():
+    """Verifica que Dovela valide sus parámetros de entrada."""
+    print("=== TEST DOVELA VALORES INVÁLIDOS ===")
+
+    with pytest.raises(ValueError):
+        Dovela(
+            x_centro=0.0,
+            ancho=-1.0,
+            altura=1.0,
+            angulo_alpha=math.radians(30),
+            cohesion=5.0,
+            phi_grados=20.0,
+            gamma=18.0,
+            peso=18.0,
+            presion_poros=0.0,
+            longitud_arco=1.0,
+        )
+
+    with pytest.raises(ValueError):
+        Dovela(
+            x_centro=0.0,
+            ancho=1.0,
+            altura=0.0,
+            angulo_alpha=math.radians(30),
+            cohesion=5.0,
+            phi_grados=20.0,
+            gamma=18.0,
+            peso=0.0,
+            presion_poros=0.0,
+            longitud_arco=1.0,
+        )
+
+    with pytest.raises(ValueError):
+        Dovela(
+            x_centro=0.0,
+            ancho=1.0,
+            altura=1.0,
+            angulo_alpha=math.radians(85),
+            cohesion=5.0,
+            phi_grados=20.0,
+            gamma=18.0,
+            peso=18.0,
+            presion_poros=0.0,
+            longitud_arco=1.0,
+        )
+
+    print("✅ Test dovela valores inválidos PASADO\n")
 
 
 def test_dovela_con_traccion():
