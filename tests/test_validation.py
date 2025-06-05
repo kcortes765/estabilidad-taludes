@@ -146,7 +146,7 @@ def test_validar_dovela():
     
     print(f"\nDovela ángulo extremo: α={math.degrees(dovela_angulo_extremo.angulo_alpha):.1f}°")
     print(f"  Resultado: {resultado_extremo.mensaje}")
-    # 80° está dentro del rango de mi validación (±90°), así que debe ser válido
+    # 80° está dentro del rango permitido por Dovela.__post_init__ (±80°), así que debe ser válido
     assert resultado_extremo.es_valido, "Ángulo de 80° debe ser válido"
     
     # Dovela con mα problemático (ángulo muy negativo + φ bajo)
