@@ -163,10 +163,11 @@ def test_generacion_reporte():
         
         print("✅ Reporte generado correctamente")
         print(f"   Longitud del reporte: {len(reporte)} caracteres")
-        print(f"   Líneas del reporte: {len(reporte.split('\\n'))}")
-        
-        # Mostrar parte del reporte
+
         lineas = reporte.split('\n')
+        print(f"   Líneas del reporte: {len(lineas)}")
+
+        # Mostrar parte del reporte
         print("\n📋 EXTRACTO DEL REPORTE:")
         for i, linea in enumerate(lineas[:15]):  # Primeras 15 líneas
             print(f"   {linea}")
