@@ -643,25 +643,6 @@ class PlottingPanel(ctk.CTkFrame):
         self.current_bishop_result = None
         self.current_fellenius_result = None
     
-    def export_plots(self, base_filename="analisis_talud"):
-        """Exportar todos los gráficos."""
-        try:
-            # Geometría
-            self.geom_fig.savefig(f"{base_filename}_geometria.png", dpi=300, bbox_inches='tight')
-            
-            # Análisis
-            self.analysis_fig.savefig(f"{base_filename}_analisis.png", dpi=300, bbox_inches='tight')
-            
-            # Comparación
-            self.comp_fig.savefig(f"{base_filename}_comparacion.png", dpi=300, bbox_inches='tight')
-            
-            # Convergencia
-            self.conv_fig.savefig(f"{base_filename}_convergencia.png", dpi=300, bbox_inches='tight')
-            
-            return True
-        except Exception as e:
-            print(f"Error exportando gráficos: {e}")
-            return False
 
     def update_plots(self, bishop_result=None, fellenius_result=None, parameters=None):
         """Actualizar todos los gráficos con nuevos resultados."""

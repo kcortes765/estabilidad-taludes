@@ -784,7 +784,7 @@ class ToolsPanel(ctk.CTkFrame):
         self.clear_btn = ctk.CTkButton(
             button_row, text="🗑️ Limpiar", command=self.clear_results, width=100
         )
-        self.clear_btn.pack(side="right", padx=2, fill="x", expand=True)
+        self.clear_btn.pack(fill="x", expand=True)
 
         # Ayuda
         self.help_btn = ctk.CTkButton(
