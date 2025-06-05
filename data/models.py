@@ -86,6 +86,13 @@ class Dovela:
     longitud_arco: float  # ΔL en m
     fuerza_normal_efectiva: float = 0.0  # N' en kN
     tiene_traccion: bool = False
+    y_base: float = 0.0
+    y_superficie: float = 0.0
+
+    @property
+    def ancho_dovela(self) -> float:
+        """Alias para el ancho de la dovela."""
+        return self.ancho
     
     def __post_init__(self):
         """Validaciones básicas de geometría y parámetros."""
