@@ -350,7 +350,7 @@ def crear_dovelas(circulo: CirculoFalla, perfil_terreno: List[Tuple[float, float
             print(f"DEBUG:   Llamando calcular_presion_poros(x_centro={x_centro:.2f}, altura={altura:.2f}, ...)")
             presion_poros = calcular_presion_poros(x_centro, altura, perfil_terreno, nivel_freatico)
             print(f"DEBUG:     Presión de poros calculada: {presion_poros:.2f}")
-            
+
             # Crear dovela
             dovela = Dovela(
                 x_centro=x_centro,
@@ -364,6 +364,10 @@ def crear_dovelas(circulo: CirculoFalla, perfil_terreno: List[Tuple[float, float
                 presion_poros=presion_poros,
                 longitud_arco=longitud_arco
             )
+            # Guardar elevaciones para compatibilidad con la GUI
+            y_superficie = interpolar_terreno(x_centro, perfil_terreno)
+            dovela.y_superficie = y_superficie
+            dovela.y_base = y_superficie - altura
             print(f"DEBUG:   Dovela {i} CREADA con éxito.")
             dovelas.append(dovela)
             
