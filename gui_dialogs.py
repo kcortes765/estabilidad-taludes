@@ -189,87 +189,6 @@ class AppUtils:
     """Utilidades para la aplicación."""
     
     @staticmethod
-    def export_results(app_instance):
-        """Exportar resultados y gráficos."""
-        if not app_instance.current_bishop_result and not app_instance.current_fellenius_result:
-            messagebox.showwarning("Sin resultados", "No hay resultados para exportar")
-            return
-        
-        # Seleccionar directorio
-        directory = filedialog.askdirectory(title="Seleccionar directorio para exportar")
-        if not directory:
-            return
-        
-        try:
-            # Exportar gráficos
-            base_filename = os.path.join(directory, "analisis_talud")
-            success = app_instance.plotting_panel.export_plots(base_filename)
-            
-            if success:
-                # Exportar reporte de texto
-                AppUtils._export_text_report(app_instance, base_filename + "_reporte.txt")
-                messagebox.showinfo("Exportación exitosa", 
-                                  f"Resultados exportados a:\n{directory}")
-            else:
-                messagebox.showerror("Error", "Error al exportar gráficos")
-                
-        except Exception as e:
-            messagebox.showerror("Error", f"Error durante la exportación:\n{str(e)}")
-    
-    @staticmethod
-    def _export_text_report(app_instance, filename):
-        """Exportar reporte de texto."""
-        with open(filename, 'w', encoding='utf-8') as f:
-            f.write("REPORTE DE ANÁLISIS DE ESTABILIDAD DE TALUDES\n")
-            f.write("=" * 50 + "\n\n")
-            
-            # Parámetros
-            params = app_instance.parameter_panel.get_parameters()
-            f.write("PARÁMETROS DEL ANÁLISIS:\n")
-            f.write(f"Altura del talud: {params['altura']:.1f} m\n")
-            f.write(f"Ángulo del talud: {params['angulo_talud']:.1f}°\n")
-            f.write(f"Cohesión: {params['cohesion']:.1f} kPa\n")
-            f.write(f"Ángulo de fricción: {params['phi_grados']:.1f}°\n")
-            f.write(f"Peso específico: {params['gamma']:.1f} kN/m³\n")
-            f.write(f"Número de dovelas: {params['num_dovelas']}\n")
-            if params['con_agua']:
-                f.write(f"Nivel freático: {params['altura_nf']:.1f} m\n")
-            f.write("\n")
-            
-            # Resultados Bishop
-            if app_instance.current_bishop_result:
-                f.write("RESULTADOS - MÉTODO DE BISHOP:\n")
-                f.write(f"Factor de Seguridad: {app_instance.current_bishop_result.factor_seguridad:.3f}\n")
-                f.write(f"Iteraciones: {app_instance.current_bishop_result.iteraciones}\n")
-                f.write(f"Convergió: {'Sí' if app_instance.current_bishop_result.convergio else 'No'}\n")
-                f.write("\n")
-            
-            # Resultados Fellenius
-            if app_instance.current_fellenius_result:
-                f.write("RESULTADOS - MÉTODO DE FELLENIUS:\n")
-                f.write(f"Factor de Seguridad: {app_instance.current_fellenius_result.factor_seguridad:.3f}\n")
-                f.write(f"Momento Resistente: {app_instance.current_fellenius_result.momento_resistente:.1f} kN·m\n")
-                f.write(f"Momento Actuante: {app_instance.current_fellenius_result.momento_actuante:.1f} kN·m\n")
-                f.write("\n")
-            
-            # Interpretación
-            if app_instance.current_bishop_result:
-                fs = app_instance.current_bishop_result.factor_seguridad
-                f.write("INTERPRETACIÓN:\n")
-                if fs >= 2.0:
-                    f.write("Estado: MUY SEGURO\n")
-                    f.write("Recomendación: Talud muy estable, proceder con confianza\n")
-                elif fs >= 1.5:
-                    f.write("Estado: SEGURO\n")
-                    f.write("Recomendación: Talud estable, condiciones aceptables\n")
-                elif fs >= 1.3:
-                    f.write("Estado: ACEPTABLE\n")
-                    f.write("Recomendación: Talud marginalmente estable, monitorear\n")
-                else:
-                    f.write("Estado: MARGINAL/INESTABLE\n")
-                    f.write("Recomendación: Considerar medidas de estabilización\n")
-    
-    @staticmethod
     def clear_results(app_instance):
         """Limpiar todos los resultados."""
         app_instance.current_bishop_result = None
@@ -394,10 +313,6 @@ ANÁLISIS DE ESTABILIDAD DE TALUDES
 def add_utility_methods(app_class):
     """Agregar métodos de utilidad a la clase de aplicación."""
     
-    def export_results(self):
-        """Exportar resultados y gráficos."""
-        AppUtils.export_results(self)
-    
     def clear_results(self):
         """Limpiar todos los resultados."""
         AppUtils.clear_results(self)
@@ -419,7 +334,6 @@ def add_utility_methods(app_class):
         AppUtils.show_help()
     
     # Agregar métodos a la clase
-    app_class.export_results = export_results
     app_class.clear_results = clear_results
     app_class.show_file_menu = show_file_menu
     app_class.show_analysis_menu = show_analysis_menu

@@ -476,6 +476,11 @@ class SlopeStabilityApp:
         """Actualizar mensaje de estado."""
         if hasattr(self, 'status_label'):
             self.status_label.configure(text=message)
+
+    def clear_results(self):
+        """Limpiar todos los resultados de la aplicación."""
+        from gui_dialogs import AppUtils
+        AppUtils.clear_results(self)
     
     def on_closing(self):
         """Manejar cierre de aplicación."""

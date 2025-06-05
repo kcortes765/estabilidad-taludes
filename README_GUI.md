@@ -11,7 +11,6 @@ Interfaz gráfica moderna y completa para el sistema de análisis de estabilidad
 - **Análisis en Tiempo Real**: Visualización inmediata de resultados
 - **Análisis Paramétrico**: Estudios de sensibilidad automatizados
 - **Nivel Freático**: Consideración de condiciones saturadas
-- **Exportación Completa**: Gráficos y reportes en múltiples formatos
 
 ### 🎨 Interfaz de Usuario
 - **Diseño Moderno**: Interfaz limpia y profesional con CustomTkinter
@@ -70,10 +69,6 @@ python run_gui.py
    - Comparar diferentes configuraciones
    - Analizar convergencia del método Bishop
 
-4. **Exportar Resultados**
-   - Guardar gráficos en alta resolución
-   - Generar reportes de texto
-   - Exportar datos para análisis posterior
 
 ## Estructura de la GUI
 
@@ -102,7 +97,7 @@ run_gui.py         # Script de inicio con verificaciones
 
 #### Panel de Herramientas
 - **Análisis**: Ejecutar cálculos, análisis paramétrico
-- **Exportación**: Guardar gráficos y reportes
+- **Resultados**: Visualización y limpieza de análisis
 - **Utilidades**: Limpiar resultados, ayuda
 
 #### Panel de Visualización

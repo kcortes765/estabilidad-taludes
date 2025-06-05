@@ -758,15 +758,10 @@ class ToolsPanel(ctk.CTkFrame):
         button_row = ctk.CTkFrame(utility_frame)
         button_row.pack(fill="x", pady=2)
 
-        self.export_btn = ctk.CTkButton(
-            button_row, text="💾 Exportar", command=self.export_results, width=100
-        )
-        self.export_btn.pack(side="left", padx=2, fill="x", expand=True)
-
         self.clear_btn = ctk.CTkButton(
             button_row, text="🗑️ Limpiar", command=self.clear_results, width=100
         )
-        self.clear_btn.pack(side="right", padx=2, fill="x", expand=True)
+        self.clear_btn.pack(fill="x", padx=2, pady=2)
 
         # Ayuda
         self.help_btn = ctk.CTkButton(
@@ -788,11 +783,6 @@ class ToolsPanel(ctk.CTkFrame):
         """Ejecutar análisis paramétrico."""
         if self.app:
             self.app.run_parametric_analysis()
-
-    def export_results(self):
-        """Exportar resultados."""
-        if self.app:
-            self.app.export_results()
 
     def clear_results(self):
         """Limpiar resultados."""
