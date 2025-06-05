@@ -547,7 +547,6 @@ class ManualCircleDialog(ctk.CTkToplevel):
         perfil = generar_perfil_simple(
             altura=self.params['altura'],
             angulo_grados=self.params['angulo_talud'],
-            longitud_base=30
         )
         
         # Limpiar el gráfico

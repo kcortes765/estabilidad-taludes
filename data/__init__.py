@@ -8,9 +8,14 @@ Contiene:
 """
 
 from .models import (
-    Estrato, Dovela, CirculoFalla,
-    crear_estrato_homogeneo, crear_circulo_simple,
-    GRAVEDAD, DENSIDAD_AGUA
+    Estrato,
+    Dovela,
+    CirculoFalla,
+    crear_estrato_homogeneo,
+    crear_circulo_simple,
+    generar_perfil_simple,
+    GRAVEDAD,
+    DENSIDAD_AGUA,
 )
 
 from .validation import (
@@ -38,8 +43,12 @@ from .constants import (
 
 __all__ = [
     # Modelos
-    'Estrato', 'Dovela', 'CirculoFalla',
-    'crear_estrato_homogeneo', 'crear_circulo_simple',
+    'Estrato',
+    'Dovela',
+    'CirculoFalla',
+    'crear_estrato_homogeneo',
+    'crear_circulo_simple',
+    'generar_perfil_simple',
     
     # Constantes
     'GRAVEDAD', 'DENSIDAD_AGUA',

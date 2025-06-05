@@ -350,6 +350,38 @@ def crear_circulo_simple(xc: float, yc: float, radio: float) -> CirculoFalla:
     return CirculoFalla(xc=xc, yc=yc, radio=radio)
 
 
+def generar_perfil_simple(
+    altura: float,
+    angulo_grados: float,
+    longitud_base: float | None = None,
+    num_puntos: int = 50,
+) -> List[Tuple[float, float]]:
+    """Generar un perfil de talud sencillo.
+
+    Esta función es un contenedor liviano sobre ``crear_perfil_terreno`` de
+    ``core.geometry``. Si ``longitud_base`` no se especifica, la longitud se
+    calcula automáticamente en función de la altura y el ángulo del talud.
+
+    Args:
+        altura: Altura del talud en metros.
+        angulo_grados: Ángulo del talud en grados.
+        longitud_base: Longitud horizontal de la base. Si ``None`` se estima de
+            forma automática.
+        num_puntos: Número de puntos que compondrán el perfil.
+
+    Returns:
+        Lista de tuplas ``(x, y)`` que representan el perfil del terreno.
+    """
+    from core.geometry import crear_perfil_terreno
+
+    return crear_perfil_terreno(
+        altura=altura,
+        angulo_grados=angulo_grados,
+        longitud_base=longitud_base,
+        num_puntos=num_puntos,
+    )
+
+
 # Constantes útiles
 GRAVEDAD = 9.81  # m/s²
 DENSIDAD_AGUA = 9.81  # kN/m³ (γw)

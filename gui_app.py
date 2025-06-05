@@ -156,7 +156,6 @@ class SlopeStabilityApp:
             perfil_terreno = generar_perfil_simple(
                 altura=params['altura'],
                 angulo_grados=params['angulo_talud'],
-                longitud_base=30
             )
             print(f"[DEBUG] Perfil generado con {len(perfil_terreno)} puntos")
             
@@ -206,7 +205,6 @@ class SlopeStabilityApp:
                 perfil_terreno = generar_perfil_simple(
                     altura=params['altura'],
                     angulo_grados=params['angulo_talud'],
-                    longitud_base=params.get('longitud_base_talud', 3 * params['altura']) # Default base if not specified
                 )
             except Exception as e:
                 self.update_status(f"Error generando perfil para validación: {e}")
