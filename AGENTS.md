@@ -1,12 +1,9 @@
 # Guía para el Agente IA: Estrategia de Pruebas Exhaustiva
 
 ## Objetivo Principal para el Agente IA: Generación y Ejecución de Pruebas
-
 Tu tarea principal es desarrollar y ejecutar un conjunto de pruebas exhaustivas para el proyecto `estabilidad-taludes_model`. El objetivo es asegurar la robustez, precisión y fiabilidad de la aplicación en todas sus facetas, desde la interfaz de usuario hasta los cálculos más complejos del núcleo.
 
-**Necesitamos probar TODO.** No asumas que algo funciona; verifica cada componente, cada función, cada interacción.
-
-A continuación, se presenta una lista conceptual de categorías de pruebas y ejemplos de pruebas individuales. Debes usar estas ideas como base para generar pruebas concretas utilizando `pytest` y otras herramientas de testing adecuadas.
+**Necesitamos probar TODO.** No asumas que algo funciona; verifica cada componente, cada función, cada interacción.  A continuación, se presenta una lista conceptual de categorías de pruebas y ejemplos de pruebas individuales. Debes usar estas ideas como base para generar pruebas concretas utilizando `pytest` y otras herramientas de testing adecuadas.
 
 ---
 
@@ -118,14 +115,11 @@ A continuación, se presenta una lista conceptual de categorías de pruebas y ej
 6.  **Automatización:** Las pruebas deben ser completamente automatizadas y ejecutables sin intervención manual.
 7.  **Colaboración:** Si encuentras ambigüedades en las ideas de prueba o necesitas aclaraciones sobre el comportamiento esperado, pregunta.
 8.  **Actualización de Código:** Si descubres bugs a través de estas pruebas, documenta el bug y, si es posible, crea una solución. Sin embargo, el enfoque principal es la creación de pruebas.
-
-¡Comienza a construir un conjunto de pruebas que nos dé total confianza en la aplicación!
+ ¡Comienza a construir un conjunto de pruebas que nos dé total confianza en la aplicación!
 
 ---
 
-## Plan de Resolución de Bugs Identificados (Actualización)
-
-Se han identificado dos bugs críticos que impiden el correcto funcionamiento y la visualización de resultados. La estrategia para su resolución se centrará en la creación de tests que reproduzcan el error, la implementación de soluciones robustas y la evaluación iterativa de los resultados.
+## Plan de Resolución de Bugs Identificados (Actualización) Se han identificado dos bugs críticos que impiden el correcto funcionamiento y la visualización de resultados. La estrategia para su resolución se centrará en la creación de tests que reproduzcan el error, la implementación de soluciones robustas y la evaluación iterativa de los resultados.
 
 ### Bug 1: `AttributeError: 'Dovela' object has no attribute 'y_base'`
 
@@ -170,9 +164,7 @@ Se han identificado dos bugs críticos que impiden el correcto funcionamiento y 
     *   Integrar estos tests en el conjunto de pruebas general y asegurar que no introducen regresiones.
     *   **Iteración:** Si se encuentran nuevos problemas, documentarlos y repetir el ciclo de test-solución-evaluación.
 
----
-
-**Instrucciones Generales para la Resolución de Bugs:**
+--- **Instrucciones Generales para la Resolución de Bugs:**
 *   **Priorización:** Abordar el Bug 1 (`AttributeError`) primero, ya que es un bloqueador para la visualización.
 *   **Desarrollo Dirigido por Pruebas (TDD):** Para cada bug, escribir los tests de reproducción *antes* de implementar la solución. Esto asegura que la solución realmente corrige el problema y que no se introducen regresiones.
 *   **Modularidad:** Mantener las soluciones lo más localizadas posible, afectando solo el código necesario.
