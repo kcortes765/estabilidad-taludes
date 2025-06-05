@@ -655,16 +655,10 @@ class SlopeStabilityApp:
                           "Desarrollado para análisis geotécnico profesional\n\n"
                           " 2024 Sistema de Análisis de Estabilidad")
 
-    def clear_results(self):
-        """Restablecer resultados y gráficos."""
-        self.current_bishop_result = None
-        self.current_fellenius_result = None
-        if hasattr(self, "results_panel"):
-            self.results_panel.update_results()
-        if hasattr(self, "plotting_panel"):
-            self.plotting_panel.clear_all_plots()
-        self.progress_bar.set(0)
-        self.update_status("Resultados limpiados")
+    # Nota: La lógica de limpieza completa se define anteriormente en
+    # `clear_results`. Esta versión redundante generaba confusión y no
+    # restablecía los parámetros de entrada. Se elimina para evitar que
+    # sobrescriba el comportamiento correcto.
     
     def _show_circle_correction_info(self, resultado):
         """Mostrar información sobre corrección automática de círculos."""
