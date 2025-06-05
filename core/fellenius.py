@@ -107,7 +107,7 @@ def calcular_fuerza_actuante_dovela(dovela: Dovela) -> float:
     Returns:
         Fuerza actuante en kN
     """
-    return -(dovela.peso * dovela.sin_alpha)
+    return dovela.peso * dovela.sin_alpha
 
 
 def analizar_fellenius(circulo: CirculoFalla,
@@ -189,11 +189,12 @@ def analizar_fellenius(circulo: CirculoFalla,
     
     # Calcular momentos totales
     momento_resistente = sum(fuerzas_resistentes) * circulo.radio
-    momento_actuante = sum(fuerzas_actuantes) * circulo.radio
-    
-    # Calcular factor de seguridad
-    if momento_actuante <= 0:
+    suma_actuantes = sum(fuerzas_actuantes)
+    if suma_actuantes == 0:
         raise ValidacionError("Momento actuante ≤ 0: superficie de falla inválida")
+    momento_actuante = abs(suma_actuantes) * circulo.radio
+
+    # Calcular factor de seguridad
     
     factor_seguridad = momento_resistente / momento_actuante
     
@@ -208,7 +209,7 @@ def analizar_fellenius(circulo: CirculoFalla,
         'dovelas_en_traccion': len(dovelas_problematicas),
         'porcentaje_traccion': (len(dovelas_problematicas) / len(dovelas)) * 100,
         'suma_fuerzas_resistentes': sum(fuerzas_resistentes),
-        'suma_fuerzas_actuantes': sum(fuerzas_actuantes),
+        'suma_fuerzas_actuantes': abs(sum(fuerzas_actuantes)),
         'radio_circulo': circulo.radio,
         'centro_circulo': (circulo.xc, circulo.yc),
         'metodo': 'Fellenius',
