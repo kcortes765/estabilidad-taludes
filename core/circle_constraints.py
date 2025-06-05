@@ -405,6 +405,19 @@ def aplicar_limites_inteligentes(
     return calculador.calcular_limites_desde_perfil(perfil_terreno)
 
 
+def validar_circulo_geometricamente(
+    circulo: CirculoFalla,
+    limites: LimitesGeometricos,
+    corregir_automaticamente: bool = True,
+) -> ResultadoValidacion:
+    """Valida un círculo usando límites pre-calculados."""
+
+    calculador = CalculadorLimites()
+    return calculador.validar_y_corregir_circulo(
+        circulo, limites, corregir_automaticamente
+    )
+
+
 # Función de conveniencia para validación rápida
 def validar_circulo_con_limites(
     circulo: CirculoFalla,
