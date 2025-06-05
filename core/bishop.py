@@ -15,6 +15,9 @@ El método requiere iteración hasta convergencia (|Fs_nuevo - Fs_anterior| < to
 import math
 from typing import List, Tuple, Optional, Dict, Any
 from dataclasses import dataclass
+import logging
+from logging_utils import get_logger
+logger = get_logger(__name__)
 
 from data.models import Estrato, Dovela, CirculoFalla
 from data.constants import TOLERANCIA_CONVERGENCIA_BISHOP, MAX_ITERACIONES_BISHOP
@@ -77,7 +80,9 @@ def calcular_m_alpha(dovela: Dovela, factor_seguridad: float) -> float:
     Raises:
         ValidacionError: Si mα ≤ 0 (condición crítica)
     """
+    logger.debug("Calculando m_alpha para dovela x=%s", dovela.x_centro)
     if factor_seguridad <= 0:
+        logger.error("Factor de seguridad no válido: %s", factor_seguridad)
         raise ValidacionError(f"Factor de seguridad debe ser > 0: {factor_seguridad}")
     
     # Calcular mα
@@ -85,6 +90,7 @@ def calcular_m_alpha(dovela: Dovela, factor_seguridad: float) -> float:
     
     # Validación crítica: mα debe ser > 0
     if m_alpha <= 0:
+        logger.error("m_alpha <= 0 para la dovela en x=%s", dovela.x_centro)
         raise ValidacionError(
             f"mα ≤ 0 en dovela (x={dovela.x_centro:.1f}): mα={m_alpha:.4f}. "
             f"Esto indica que α={math.degrees(dovela.angulo_alpha):.1f}° es demasiado empinado "
