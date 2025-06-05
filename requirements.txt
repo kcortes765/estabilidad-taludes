@@ -1,0 +1,7 @@
+customtkinter
+matplotlib
+numpy
+Pillow
+tkinter-tooltip
+pytest
+pytest-cov
