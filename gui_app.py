@@ -3,9 +3,12 @@ Aplicación principal de la interfaz gráfica para análisis de estabilidad de t
 """
 
 import customtkinter as ctk
+import logging
+from logging_utils import get_logger
 import tkinter as tk
 import tkinter.messagebox as messagebox
 import threading
+logger = get_logger(__name__)
 import numpy as np
 
 from gui_components import ParameterPanel, ResultsPanel, ToolsPanel
@@ -126,30 +129,30 @@ class SlopeStabilityApp:
     
     def on_parameter_change(self, command=None):
         """Callback cuando cambian los parámetros."""
-        print(f"[DEBUG] on_parameter_change llamado con comando: {command}")
+        logger.debug('on_parameter_change llamado con comando: %s', command)
         
         if command == 'show_geometry':
-            print("[DEBUG] Ejecutando show_geometry")
+            logger.debug('Ejecutando show_geometry')
             # Mostrar solo la geometría del talud
             self.show_slope_geometry()
         elif command == 'run_analysis':
-            print("[DEBUG] Ejecutando run_analysis")
+            logger.debug('Ejecutando run_analysis')
             # Ejecutar análisis completo
             self.run_analysis()
         elif self.current_bishop_result or self.current_fellenius_result:
-            print("[DEBUG] Auto-actualizando análisis existente")
+            logger.debug('Auto-actualizando análisis existente')
             # Auto-actualizar si hay resultados previos
             self.run_analysis()
         else:
-            print(f"[DEBUG] Comando no reconocido o sin resultados previos: {command}")
+            logger.debug('Comando no reconocido o sin resultados previos: %s', command)
     
     def show_slope_geometry(self):
         """Mostrar solo la geometría del talud sin análisis."""
-        print("[DEBUG] Iniciando show_slope_geometry")
+        logger.debug('Iniciando show_slope_geometry')
         try:
             # Obtener parámetros
             params = self.parameter_panel.get_parameters()
-            print(f"[DEBUG] Parámetros obtenidos: {params}")
+            logger.debug('Parámetros obtenidos: %s', params)
             
             # Generar perfil del talud
             from data.models import generar_perfil_simple
@@ -157,16 +160,16 @@ class SlopeStabilityApp:
                 altura=params['altura'],
                 angulo_grados=params['angulo_talud'],
             )
-            print(f"[DEBUG] Perfil generado con {len(perfil_terreno)} puntos")
+            logger.debug('Perfil generado con %d puntos', len(perfil_terreno))
             
             # Mostrar en el panel de plotting
             self.plotting_panel.show_slope_only(perfil_terreno, params)
-            print("[DEBUG] Perfil enviado al panel de plotting")
+            logger.debug('Perfil enviado al panel de plotting')
             
             self.update_status(f"Geometría cargada: Talud {params['altura']:.1f}m, ángulo {params['angulo_talud']:.1f}°")
             
         except Exception as e:
-            print(f"[ERROR] Error en show_slope_geometry: {e}")
+            logger.exception('Error en show_slope_geometry: %s', e)
             self.update_status(f"Error al cargar geometría: {str(e)}")
             import traceback
             traceback.print_exc()
@@ -247,27 +250,34 @@ class SlopeStabilityApp:
             if not resultado_validacion.es_valido:
                 if resultado_validacion.circulo_corregido:
                     self.update_status("Círculo original inválido, aplicando corrección automática...")
-                    # Log violaciones para el usuario o desarrollador
-                    print(f"[INFO] Violaciones de círculo: {resultado_validacion.violaciones}")
-                    messagebox.showwarning("Corrección Automática", 
-                                           f"El círculo original era inválido y ha sido corregido.\nViolaciones: {'; '.join(resultado_validacion.violaciones)}\nSugerencias: {'; '.join(resultado_validacion.sugerencias)}")
-                    
+                    messagebox.showwarning(
+                        "Corrección Automática",
+                        f"El círculo original era inválido y ha sido corregido.\n"
+                        f"Violaciones: {'; '.join(resultado_validacion.violaciones)}\n"
+                        f"Sugerencias: {'; '.join(resultado_validacion.sugerencias)}"
+                    )
+                    logger.info('Violaciones de círculo: %s', resultado_validacion.violaciones)
                     params['centro_x'] = resultado_validacion.circulo_corregido.xc
                     params['centro_y'] = resultado_validacion.circulo_corregido.yc
                     params['radio'] = resultado_validacion.circulo_corregido.radio
-                    
-                    # Actualizar visualmente los campos en ParameterPanel
-                    # Esto asume que ParameterPanel tiene un método para actualizar los campos del círculo.
-                    # Si no existe, este método necesitaría ser añadido a gui_components.py.
+
                     if hasattr(self.parameter_panel, 'update_circle_entries'):
-                        self.parameter_panel.update_circle_entries(params['centro_x'], params['centro_y'], params['radio'])
+                        self.parameter_panel.update_circle_entries(
+                            params['centro_x'], params['centro_y'], params['radio']
+                        )
                     else:
-                        print("[WARN] ParameterPanel no tiene update_circle_entries. Los campos no se actualizarán visualmente.")
-                        self.update_status("Círculo corregido. Ejecute 'Mostrar Geometría' para ver cambios si no se reflejan.")
+                        logger.warning('ParameterPanel no tiene update_circle_entries. Los campos no se actualizarán visualmente.')
+                        self.update_status(
+                            "Círculo corregido. Ejecute 'Mostrar Geometría' para ver cambios si no se reflejan."
+                        )
                 else:
-                    self.update_status(f"Error: Círculo inválido y no se pudo corregir. Violaciones: {resultado_validacion.violaciones}")
-                    messagebox.showerror("Error de Validación", 
-                                           f"El círculo de falla es inválido y no pudo ser corregido automáticamente.\nViolaciones: {'; '.join(resultado_validacion.violaciones)}\nSugerencias: {'; '.join(resultado_validacion.sugerencias)}")
+                    logger.warning('ParameterPanel no tiene update_circle_entries. Los campos no se actualizarán visualmente.')
+                    messagebox.showerror(
+                        "Error de Validación",
+                        f"El círculo de falla es inválido y no pudo ser corregido automáticamente.\n"
+                        f"Violaciones: {'; '.join(resultado_validacion.violaciones)}\n"
+                        f"Sugerencias: {'; '.join(resultado_validacion.sugerencias)}"
+                    )
                     self.analysis_running = False
                     self.progress_bar.set(0)
                     return # Detener análisis
@@ -345,10 +355,12 @@ class SlopeStabilityApp:
                 )
                 
         except Exception as e:
-            print(f"Error actualizando UI: {e}")
+            logger.exception("Error actualizando UI: %s", e)
     
     def _show_analysis_error(self, error_msg):
-        """Mostrar error de análisis al usuario."""
+        """Mostrar error de análisis al usuario y registrarlo."""
+        logger.error("%s", error_msg)
+        self.update_status(error_msg)
         import tkinter.messagebox as messagebox
         messagebox.showerror(
             "Error en Análisis",
@@ -658,7 +670,7 @@ class SlopeStabilityApp:
                 messagebox.showinfo("Corrección Automática", mensaje)
                 
         except Exception as e:
-            print(f"Error mostrando información de corrección: {e}")
+            logger.exception('Error mostrando información de corrección: %s', e)
 
 
 def main():

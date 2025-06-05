@@ -6,10 +6,12 @@ Script de inicio mejorado para la aplicación GUI de estabilidad de taludes.
 import sys
 import os
 import traceback
+from logging_utils import setup_logging
 
 def main():
     """Función principal con manejo de errores."""
     try:
+        setup_logging()
         print("Iniciando aplicación GUI de Estabilidad de Taludes...")
         print("=" * 50)
         
