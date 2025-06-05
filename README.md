@@ -55,7 +55,7 @@ python gui_app.py
 ## Estructura del Proyecto
 
 ```
-estabilidadad-taludes_model/
+estabilidad-taludes_model/
 ├── gui_app.py              # Aplicación principal
 ├── gui_analysis.py         # Funciones wrapper para GUI
 ├── gui_components.py       # Componentes de interfaz
