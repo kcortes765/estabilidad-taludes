@@ -18,6 +18,11 @@ from enum import Enum
 import logging
 
 from data.models import CirculoFalla, Estrato
+from utils.config import load_config
+from utils.logging_setup import setup_logging
+
+# Configure logging based on external configuration
+setup_logging(load_config().get("logging", {}))
 
 
 class TipoRestriccion(Enum):
@@ -72,14 +77,15 @@ class ResultadoValidacion:
 class CalculadorLimites:
     """Calculador inteligente de límites geométricos"""
 
-    def __init__(self):
-        # Factores de seguridad para límites
-        self.factor_margen_lateral = 0.6  # 60% del ancho como margen lateral
-        self.factor_altura_minima = 1.2  # 120% de altura mínima sobre terreno
-        self.factor_altura_maxima = 3.0  # 300% de altura máxima sobre terreno
-        self.factor_radio_min = 0.15  # 15% de diagonal como radio mínimo
-        self.factor_radio_max = 2.5  # 250% de diagonal como radio máximo
-        self.cobertura_minima = 0.3  # 30% cobertura mínima del talud
+    def __init__(self, config: Optional[Dict[str, Any]] = None):
+        """Inicializa el calculador utilizando parámetros de configuración."""
+        cfg = config or load_config().get("circle_constraints", {})
+        self.factor_margen_lateral = cfg.get("factor_margen_lateral", 0.6)
+        self.factor_altura_minima = cfg.get("factor_altura_minima", 1.2)
+        self.factor_altura_maxima = cfg.get("factor_altura_maxima", 3.0)
+        self.factor_radio_min = cfg.get("factor_radio_min", 0.15)
+        self.factor_radio_max = cfg.get("factor_radio_max", 2.5)
+        self.cobertura_minima = cfg.get("cobertura_minima", 0.3)
 
     def calcular_limites_desde_perfil(
         self,

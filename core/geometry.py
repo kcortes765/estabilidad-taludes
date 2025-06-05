@@ -15,8 +15,9 @@ import numpy as np
 from data.models import Dovela, CirculoFalla, Estrato
 
 
-def calcular_y_circulo(x: float, xc: float, yc: float, radio: float, 
-                      parte_superior: bool = True) -> Optional[float]:
+def calcular_y_circulo(
+    x: float, xc: float, yc: float, radio: float, parte_superior: bool = True
+) -> float | None:
     """
     Calcula la coordenada Y de un círculo para una coordenada X dada.
     
