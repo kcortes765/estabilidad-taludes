@@ -4,7 +4,10 @@
 - **Tipo:** Aplicación de escritorio (Desktop GUI)
 - **Stack Principal:** Python, CustomTkinter, Matplotlib, NumPy
 - **Arquitectura:** Monolito con estructura modular.
-- **Objetivo Principal Actual:** Resolver bugs críticos en la GUI, completar la integración de módulos avanzados (`core/circle_constraints.py`) para asegurar un funcionamiento robusto y resultados geotécnicamente realistas.
+- **Objetivo Principal Actual y Filosofía del Proyecto:**
+        - **Prioridad Absoluta:** Asegurar la **correctitud física y matemática** de los métodos de Fellenius y Bishop. La aplicación debe ser **sólida, robusta y confiable** para su uso en ingeniería.
+        - **Responsabilidad del Agente IA:** Realizar **pruebas exhaustivas y verificaciones internas continuas** para garantizar el funcionamiento completo y preciso de todos los cálculos y funcionalidades. La IA debe ser proactiva en la identificación y corrección de cualquier desviación de los principios geotécnicos.
+        - **Desarrollo Actual:** Resolver bugs críticos en la GUI, completar la integración de módulos avanzados (`core/circle_constraints.py`) para asegurar un funcionamiento robusto y resultados geotécnicamente realistas, y añadir funcionalidades clave solicitadas.
 
 ## 2. Estructura de Directorios Clave
 ```
@@ -293,7 +296,22 @@ def test_estrato_phi_rad_conversion():
     - El radio debe ser suficiente para cortar el talud, pero no excesivamente grande.
 - ✅ **Fuerzas en Dovelas**: Las fuerzas actuantes y resistentes deben tener signos consistentes con las convenciones físicas.
 
-## 12. Tareas Prioritarias Actuales (para el Agente IA)
+## 12. Errores Específicos para Codex de OpenAI (Prioridad Alta)
+
+### 12.1 UnboundLocalError en Cálculo de Límites Geométricos
+- **Error:** `No se pudo calcular los limites geométricos: cannot access local variable where it is not associated with a value`
+- **Tipo:** `UnboundLocalError` (Python)
+- **Descripción:** Una variable local se utiliza antes de que se le haya asignado un valor.
+- **Ubicación Probable:** Dentro del módulo `core/circle_constraints.py`, específicamente en la lógica responsable de calcular los límites geométricos para el círculo de falla. Puede estar relacionado con la clase `CalculadorLimites` o funciones asociadas.
+- **Contexto:** Este error aparece en la GUI cuando se intentan mostrar o calcular los límites del círculo de falla, impidiendo la correcta validación y visualización de los círculos.
+- **Acción Requerida (Codex):**
+    1.  Identificar la variable exacta que causa el `UnboundLocalError` en `core/circle_constraints.py`.
+    2.  Analizar el flujo lógico para entender por qué la variable no se asigna en todos los casos esperados.
+    3.  Corregir el código para asegurar que la variable siempre tenga un valor asignado antes de su uso.
+    4.  Probar exhaustivamente la corrección con diversos escenarios geométricos en la GUI.
+- **Prioridad:** ALTA. Este error bloquea una funcionalidad central de la validación inteligente de círculos.
+
+## 13. Tareas Prioritarias Actuales (para el Agente IA)
 
 1.  **Completar Integración de `core/circle_constraints.py` en `gui_app.py`:**
     - **Estado Actual:** Parcialmente implementado. Se ha añadido lógica en `_run_analysis_thread` para calcular límites y validar/corregir el círculo.
@@ -303,8 +321,23 @@ def test_estrato_phi_rad_conversion():
     - **Descripción:** Actualmente, `gui_app.py` en `_run_analysis_thread` usa `params.get('longitud_base_talud', 3 * params['altura'])` y en `show_slope_geometry` usa `longitud_base=30` (fijo).
     - **Acción Requerida por Agente:** Analizar si `ParameterPanel` puede/debe proveer `longitud_base_talud`. Si no, decidir un método consistente para calcularla (ej. basado en `altura` y `angulo_talud`) y aplicarlo en ambos lugares. Considerar si `generar_perfil_simple` debería tener una lógica más robusta para esto.
     - **Archivos Afectados:** `gui_app.py`, `data/models.py` (potencialmente `generar_perfil_simple`).
+3.  **Implementar Botón "Buscar FS Crítico" (Nueva Funcionalidad):**
+    - **Descripción:** Añadir un nuevo botón a la GUI (probablemente en `ParameterPanel` o cerca de los controles de análisis) que active una búsqueda automática del círculo de falla crítico.
+    - **Funcionalidad Esperada:**
+        - Al presionarlo, el sistema debe iterar a través de una serie de círculos de falla potenciales (utilizando `smart_circle_optimizer.py` o una lógica similar).
+        - Debe identificar el círculo que produce el Factor de Seguridad (FS) mínimo.
+        - La GUI debe actualizarse para mostrar los parámetros (Xc, Yc, Radio) de este círculo crítico y el FS resultante.
+        - El proceso debe ser visualmente informativo si es posible (ej. mostrando círculos intermedios o una barra de progreso).
+    - **Acción Requerida por Agente:**
+        - Diseñar la ubicación y apariencia del botón en la GUI.
+        - Implementar la lógica de callback para el botón en `gui_app.py` o `gui_analysis.py`.
+        - Integrar con `core/smart_circle_optimizer.py` o desarrollar la lógica de optimización necesaria.
+        - Asegurar que los resultados se muestren correctamente en la GUI y en el gráfico.
+        - Añadir pruebas unitarias y de integración para esta funcionalidad.
+    - **Archivos Afectados:** `gui_components.py` (añadir botón), `gui_app.py` (callback y lógica), `gui_analysis.py` (posible lógica de orquestación), `core/smart_circle_optimizer.py` (uso o mejora).
+    - **Prioridad:** MEDIA-ALTA (después de resolver bugs críticos).
 
-## 13. Mantenimiento de AGENTS.MD
+## 14. Mantenimiento de AGENTS.MD
 
 - **Actualizar CUANDO:**
     - ✅ Se añaden/cambian dependencias críticas (`requirements.txt`).
