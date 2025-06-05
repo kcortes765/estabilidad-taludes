@@ -11,6 +11,11 @@ import numpy as np
 from gui_components import ParameterPanel, ResultsPanel, ToolsPanel
 from gui_plotting import PlottingPanel
 from gui_dialogs import ParametricDialog
+from core.circle_constraints import (
+    aplicar_limites_inteligentes,
+    validar_circulo_con_limites,
+)
+from data.models import CirculoFalla
 
 
 class SlopeStabilityApp:
@@ -191,7 +196,34 @@ class SlopeStabilityApp:
         try:
             # Obtener parámetros
             params = self.parameter_panel.get_parameters()
-            
+
+            # Crear perfil si no se proporcionó
+            from core.geometry import crear_perfil_terreno
+            perfil_terreno = params.get("perfil_terreno") or crear_perfil_terreno(
+                altura=params["altura"],
+                angulo_grados=params["angulo_talud"],
+            )
+
+            # Aplicar límites automáticos al círculo
+            circulo_usuario = CirculoFalla(
+                xc=params["centro_x"],
+                yc=params["centro_y"],
+                radio=params["radio"],
+            )
+
+            try:
+                limites = aplicar_limites_inteligentes(perfil_terreno, "talud_empinado", 1.5)
+                validacion = validar_circulo_con_limites(circulo_usuario, perfil_terreno, "talud_empinado")
+                if validacion.circulo_corregido:
+                    circulo_corregido = validacion.circulo_corregido
+                    params.update({
+                        "centro_x": circulo_corregido.xc,
+                        "centro_y": circulo_corregido.yc,
+                        "radio": circulo_corregido.radio,
+                    })
+            except Exception as e:
+                print(f"[WARN] Fallo al aplicar límites automáticos: {e}")
+
             self.progress_bar.set(0.3)
             self.update_status("Validando parámetros...")
             
