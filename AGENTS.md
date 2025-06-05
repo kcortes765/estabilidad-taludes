@@ -120,3 +120,61 @@ A continuación, se presenta una lista conceptual de categorías de pruebas y ej
 8.  **Actualización de Código:** Si descubres bugs a través de estas pruebas, documenta el bug y, si es posible, crea una solución. Sin embargo, el enfoque principal es la creación de pruebas.
 
 ¡Comienza a construir un conjunto de pruebas que nos dé total confianza en la aplicación!
+
+---
+
+## Plan de Resolución de Bugs Identificados (Actualización)
+
+Se han identificado dos bugs críticos que impiden el correcto funcionamiento y la visualización de resultados. La estrategia para su resolución se centrará en la creación de tests que reproduzcan el error, la implementación de soluciones robustas y la evaluación iterativa de los resultados.
+
+### Bug 1: `AttributeError: 'Dovela' object has no attribute 'y_base'`
+
+*   **Descripción del Problema:** La clase `Dovela` (en `data/models.py`) no posee los atributos `y_base` ni `y_superficie`. Sin embargo, el módulo de graficación (`gui_plotting.py`) intenta acceder a estos atributos al dibujar las dovelas, lo que provoca un `AttributeError` y el cierre inesperado de la aplicación.
+*   **Origen:** La función `crear_dovelas` (en `core/geometry.py`) es la encargada de instanciar los objetos `Dovela` y no les asigna estos atributos. Los objetos `Dovela` se generan a partir del resultado del análisis de Bishop (`analizar_bishop` en `core/bishop.py`), que a su vez es llamado por `bishop_talud_homogeneo`.
+*   **Impacto:** Impide la visualización de los resultados del análisis de estabilidad, haciendo que la aplicación sea inoperable para su propósito principal.
+
+**Tareas para la Resolución del Bug 1:**
+1.  **Creación de Tests de Reproducción (Pytest):**
+    *   Crear un test unitario que simule la creación de un objeto `Dovela` a través de `crear_dovelas` y luego intente acceder a `y_base` o `y_superficie`, esperando un `AttributeError` inicialmente.
+    *   Crear un test de integración que ejecute un análisis completo de Bishop y verifique que las dovelas resultantes no causan un `AttributeError` al ser procesadas para graficación (esto requerirá una simulación o mock del comportamiento de `gui_plotting.py`).
+    *   **Evaluación:** El test debe fallar antes de la corrección y pasar después.
+2.  **Análisis y Diseño de Solución Robusta:**
+    *   Determinar la fuente correcta de `y_base` y `y_superficie`. ¿Deben ser parte del `dataclass Dovela`? ¿O deben ser calculados en `gui_plotting.py` o en una función auxiliar antes de la graficación?
+    *   Si deben ser parte de `Dovela`, modificar `data/models.py` para incluir estos atributos y `crear_dovelas` para calcular y asignar sus valores.
+    *   Si deben ser calculados en otro lugar, modificar `gui_plotting.py` o una función intermedia para calcularlos dinámicamente antes de dibujar, sin depender de que estén en el objeto `Dovela`.
+    *   **Consideración:** La solución debe ser coherente con el modelo de datos y la separación de responsabilidades.
+3.  **Implementación de la Solución:** Aplicar los cambios de código según el diseño elegido.
+4.  **Ejecución y Evaluación Iterativa:**
+    *   Ejecutar los tests creados para el Bug 1. Si fallan, depurar y ajustar la solución.
+    *   Ejecutar la aplicación completa y verificar visualmente que los gráficos de dovelas se muestran correctamente sin errores.
+    *   **Iteración:** Si se encuentran nuevos problemas, documentarlos y repetir el ciclo de test-solución-evaluación.
+
+### Bug 2: `UnboundLocalError` en `validar_y_corregir_circulo`
+
+*   **Descripción del Problema:** En la función `validar_y_corregir_circulo` (en `core/circle_constraints.py`), las variables `xc_corregido`, `yc_corregido` y `radio_corregido` se declaran y asignan condicionalmente dentro de bloques `if corregir_automaticamente:`. Si estas condiciones no se cumplen (ej. `corregir_automaticamente` es `False`, o el círculo no viola ningún límite), las variables nunca son asignadas. Sin embargo, el código intenta utilizarlas más adelante para construir el objeto `circulo_corregido`, lo que resulta en un `UnboundLocalError`.
+*   **Origen:** Falta de inicialización de las variables o un flujo de control que no garantiza su asignación antes de su uso.
+*   **Impacto:** El programa falla cuando se intenta validar un círculo bajo ciertas condiciones, impidiendo la correcta operación del módulo de restricciones geométricas.
+
+**Tareas para la Resolución del Bug 2:**
+1.  **Creación de Tests de Reproducción (Pytest):**
+    *   Crear un test unitario para `validar_y_corregir_circulo` que pase un `CirculoFalla` que no viole ningún límite y con `corregir_automaticamente=False`. Este test debe reproducir el `UnboundLocalError`.
+    *   Crear tests adicionales que pasen círculos que violen límites pero con `corregir_automaticamente=False`, para asegurar que las violaciones se reportan correctamente sin errores.
+    *   **Evaluación:** Los tests deben fallar antes de la corrección y pasar después.
+2.  **Análisis y Diseño de Solución Robusta:**
+    *   Inicializar `xc_corregido`, `yc_corregido`, y `radio_corregido` con valores por defecto (ej. los valores originales del círculo) al inicio de la función. Esto garantiza que siempre tengan un valor asignado.
+    *   Alternativamente, refactorizar la lógica para que `circulo_corregido` solo se construya si `corregir_automaticamente` es `True` y se han realizado correcciones, o si se inicializa con el `circulo` original y solo se modifican los atributos necesarios.
+    *   **Consideración:** La solución debe ser limpia y evitar la repetición de código.
+3.  **Implementación de la Solución:** Aplicar los cambios de código según el diseño elegido.
+4.  **Ejecución y Evaluación Iterativa:**
+    *   Ejecutar los tests creados para el Bug 2. Si fallan, depurar y ajustar la solución.
+    *   Integrar estos tests en el conjunto de pruebas general y asegurar que no introducen regresiones.
+    *   **Iteración:** Si se encuentran nuevos problemas, documentarlos y repetir el ciclo de test-solución-evaluación.
+
+---
+
+**Instrucciones Generales para la Resolución de Bugs:**
+*   **Priorización:** Abordar el Bug 1 (`AttributeError`) primero, ya que es un bloqueador para la visualización.
+*   **Desarrollo Dirigido por Pruebas (TDD):** Para cada bug, escribir los tests de reproducción *antes* de implementar la solución. Esto asegura que la solución realmente corrige el problema y que no se introducen regresiones.
+*   **Modularidad:** Mantener las soluciones lo más localizadas posible, afectando solo el código necesario.
+*   **Documentación:** Asegurarse de que el código corregido esté bien comentado y que los cambios sean claros.
+*   **Control de Versiones:** Realizar commits atómicos con mensajes claros para cada paso (ej. "feat: Add test for Dovela y_base bug", "fix: Resolve Dovela y_base AttributeError").
