@@ -351,6 +351,10 @@ def crear_dovelas(circulo: CirculoFalla, perfil_terreno: List[Tuple[float, float
             presion_poros = calcular_presion_poros(x_centro, altura, perfil_terreno, nivel_freatico)
             print(f"DEBUG:     Presión de poros calculada: {presion_poros:.2f}")
 
+            # Calcular y_base y y_superficie para la dovela
+            y_superficie = interpolar_terreno(x_centro, perfil_terreno)
+            y_base = calcular_y_circulo(x_centro, circulo.xc, circulo.yc, circulo.radio, parte_superior=False)
+            
             # Crear dovela
             dovela = Dovela(
                 x_centro=x_centro,
@@ -362,25 +366,22 @@ def crear_dovelas(circulo: CirculoFalla, perfil_terreno: List[Tuple[float, float
                 gamma=estrato.gamma,
                 peso=peso,
                 presion_poros=presion_poros,
-                longitud_arco=longitud_arco
+                longitud_arco=longitud_arco,
+                y_base=y_base,
+                y_superficie=y_superficie
             )
-            # Guardar elevaciones para compatibilidad con la GUI
-            y_superficie = interpolar_terreno(x_centro, perfil_terreno)
-            dovela.y_superficie = y_superficie
-            dovela.y_base = y_superficie - altura
             print(f"DEBUG:   Dovela {i} CREADA con éxito.")
             dovelas.append(dovela)
             
-        except ValueError as e:
-            # Si una dovela falla, continuar con las demás
-            print(f"DEBUG:   Advertencia: No se pudo crear dovela {i} en X={x_centro:.2f}: {e}")
+        except Exception as e:
+            print(f"DEBUG:   ERROR al crear dovela {i} en X={x_centro:.2f}: {e}. Saltando dovela.")
             continue
     
     if len(dovelas) == 0:
-        print("DEBUG: Error - No se pudo crear ninguna dovela válida")
-        raise ValueError("No se pudo crear ninguna dovela válida")
-    
-    print(f"DEBUG: --- Finalizando crear_dovelas: {len(dovelas)} dovelas creadas ---")
+        print("DEBUG: Error - No se pudo crear ninguna dovela válida.")
+        raise ValueError("No se pudo crear ninguna dovela válida.")
+        
+    print(f"--- DEBUG: crear_dovelas finalizado. {len(dovelas)} dovelas creadas. ---")
     return dovelas
 
 

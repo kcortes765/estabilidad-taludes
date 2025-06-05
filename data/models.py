@@ -84,6 +84,8 @@ class Dovela:
     peso: float  # W en kN
     presion_poros: float  # u en kPa
     longitud_arco: float  # ΔL en m
+    y_base: Optional[float] = None  # Coordenada Y de la base de la dovela
+    y_superficie: Optional[float] = None  # Coordenada Y de la superficie de la dovela
     fuerza_normal_efectiva: float = 0.0  # N' en kN
     tiene_traccion: bool = False
     y_base: float = 0.0
