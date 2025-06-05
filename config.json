@@ -1,0 +1,14 @@
+{
+  "logging": {
+    "level": "INFO",
+    "filename": "app.log"
+  },
+  "circle_constraints": {
+    "factor_margen_lateral": 0.6,
+    "factor_altura_minima": 1.2,
+    "factor_altura_maxima": 3.0,
+    "factor_radio_min": 0.15,
+    "factor_radio_max": 2.5,
+    "cobertura_minima": 0.3
+  }
+}
