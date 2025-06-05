@@ -476,6 +476,19 @@ class SlopeStabilityApp:
         """Actualizar mensaje de estado."""
         if hasattr(self, 'status_label'):
             self.status_label.configure(text=message)
+
+    def clear_results(self):
+        """Restablecer parámetros y limpiar resultados y gráficos."""
+        from gui_dialogs import AppUtils
+
+        # Limpiar resultados y gráficos utilizando utilidades existentes
+        AppUtils.clear_results(self)
+
+        # Restablecer parámetros de entrada si está disponible
+        if hasattr(self, 'parameter_panel') and hasattr(self.parameter_panel, 'reset_parameters'):
+            self.parameter_panel.reset_parameters()
+
+        self.update_status("Listo para análisis")
     
     def on_closing(self):
         """Manejar cierre de aplicación."""

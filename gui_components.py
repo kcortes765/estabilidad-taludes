@@ -495,6 +495,29 @@ class ParameterPanel(ctk.CTkFrame):
             if self.callback:
                 self.callback("run_analysis")
 
+    def reset_parameters(self) -> None:
+        """Restablecer todos los campos de entrada a sus valores por defecto."""
+        # Valores por defecto
+        self.altura_var.set(8.0)
+        self.angulo_var.set(30.0)
+        self.cohesion_var.set(25.0)
+        self.phi_var.set(20.0)
+        self.gamma_var.set(18.0)
+        self.dovelas_var.set(10)
+        self.centro_x_var.set(0.0)
+        self.centro_y_var.set(15.0)
+        self.radio_var.set(12.0)
+        self.agua_var.set(False)
+        self.altura_nf_var.set(3.0)
+
+        # Restaurar elementos de interfaz
+        self.example_var.set("Manual (valores propios)")
+        self.case_description.configure(text="Ingrese sus propios valores")
+        self.load_geometry_btn.configure(text="🏔️ Cargar Geometría")
+        self.select_circle_btn.grid_remove()
+        self.toggle_water_controls(False)
+        self.update_sliders()
+
 
 class ResultsPanel(ctk.CTkFrame):
     """Panel de resultados del análisis."""
