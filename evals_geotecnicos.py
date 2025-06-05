@@ -11,7 +11,6 @@ import math
 # Agregar path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-)
 from core.circle_constraints import (
     CalculadorLimites,
     aplicar_limites_inteligentes,

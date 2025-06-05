@@ -434,10 +434,10 @@ def fellenius_con_nivel_freatico(altura: float,
     
     # Nivel freático
     nivel_freatico = crear_nivel_freatico_horizontal(
-        x_inicio=0.0, 
-        x_fin=longitud_base * 2, 
-        profundidad=profundidad_freatico,
-        num_puntos=10
+        x_inicio=0.0,
+        x_fin=longitud_base * 2,
+        elevacion=altura - profundidad_freatico,
+        num_puntos=10,
     )
     
     # Círculo de falla
