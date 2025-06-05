@@ -11,12 +11,6 @@ import math
 # Agregar path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from core.bishop import analizar_bishop
-from core.fellenius import analizar_fellenius
-from core.geometry import (
-    crear_perfil_simple,
-    crear_nivel_freatico,
-    validar_geometria_basica,
 )
 from core.circle_constraints import (
     CalculadorLimites,
@@ -25,6 +19,8 @@ from core.circle_constraints import (
     detectar_tipo_talud_desde_angulo,
 )
 from data.models import CirculoFalla, Estrato
+from gui_components import ParameterPanel, ResultsPanel
+from gui_plotting import PlottingPanel
 
 def eval_caso_literatura_bishop():
     """
@@ -524,6 +520,7 @@ def ejecutar_evals_completos():
         eval_detectar_tipo_talud,
         eval_validacion_circulo_simple,
         eval_perfil_y_nivel_freatico,
+
     ]
     
     resultados = []
