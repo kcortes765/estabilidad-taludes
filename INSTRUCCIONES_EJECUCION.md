@@ -34,7 +34,7 @@ python -c "import numpy; print('NumPy OK')"
 
 ### Método 1: Desde PowerShell/CMD
 ```bash
-cd "c:\Seba\Proyectos paralelos\estabilidadad-taludes_model"
+cd "c:\Seba\Proyectos paralelos\estabilidad-taludes_model"
 python gui_app.py
 ```
 
