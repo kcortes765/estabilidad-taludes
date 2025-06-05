@@ -139,7 +139,7 @@ def calcular_fuerza_actuante_bishop(dovela: Dovela) -> float:
     Returns:
         Fuerza actuante en kN
     """
-    return -(dovela.peso * dovela.sin_alpha)
+    return dovela.peso * dovela.sin_alpha
 
 
 def iteracion_bishop(dovelas: List[Dovela], factor_seguridad_inicial: float) -> Tuple[float, List[float], List[float], List[float]]:
@@ -172,11 +172,11 @@ def iteracion_bishop(dovelas: List[Dovela], factor_seguridad_inicial: float) -> 
     # Calcular nuevo factor de seguridad
     suma_resistentes = sum(fuerzas_resistentes)
     suma_actuantes = sum(fuerzas_actuantes)
-    
-    if suma_actuantes <= 0:
+
+    if suma_actuantes == 0:
         raise ValidacionError("Suma de fuerzas actuantes ≤ 0: superficie de falla inválida")
-    
-    nuevo_fs = suma_resistentes / suma_actuantes
+
+    nuevo_fs = suma_resistentes / abs(suma_actuantes)
     
     return nuevo_fs, fuerzas_resistentes, fuerzas_actuantes, factores_m_alpha
 
@@ -299,7 +299,8 @@ def analizar_bishop(circulo: CirculoFalla,
     
     # Calcular momentos totales
     momento_resistente = sum(fuerzas_resistentes) * circulo.radio
-    momento_actuante = sum(fuerzas_actuantes) * circulo.radio
+    suma_actuantes = sum(fuerzas_actuantes)
+    momento_actuante = abs(suma_actuantes) * circulo.radio
     
     # Validar factor de seguridad final
     resultado_fs = validar_factor_seguridad(factor_seguridad)
@@ -328,7 +329,7 @@ def analizar_bishop(circulo: CirculoFalla,
         'dovelas_m_alpha_bajo': len(dovelas_m_alpha_bajo),
         'porcentaje_traccion': (len(dovelas_problematicas) / len(dovelas)) * 100,
         'suma_fuerzas_resistentes': sum(fuerzas_resistentes),
-        'suma_fuerzas_actuantes': sum(fuerzas_actuantes),
+        'suma_fuerzas_actuantes': abs(sum(fuerzas_actuantes)),
         'radio_circulo': circulo.radio,
         'centro_circulo': (circulo.xc, circulo.yc),
         'factor_inicial': factor_inicial,
