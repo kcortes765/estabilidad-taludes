@@ -183,7 +183,7 @@ class OptimizadorCirculos:
         margen_y = (y_max - y_min) * 0.8
         
         centro_x_min, centro_x_max = x_min - margen_x, x_max + margen_x
-        centro_y_min, centro_y_max = y_max, y_max + margen_y
+        centro_y_min, centro_y_max = y_min - margen_y, y_max + margen_y
         
         diagonal = math.sqrt((x_max - x_min)**2 + (y_max - y_min)**2)
         radio_min, radio_max = diagonal * 0.2, diagonal * 2.0
@@ -295,7 +295,7 @@ class OptimizadorCirculos:
         margen_y = (y_max - y_min) * 0.8
         
         centro_x_min, centro_x_max = x_min - margen_x, x_max + margen_x
-        centro_y_min, centro_y_max = y_max, y_max + margen_y
+        centro_y_min, centro_y_max = y_min - margen_y, y_max + margen_y
         
         diagonal = math.sqrt((x_max - x_min)**2 + (y_max - y_min)**2)
         radio_min, radio_max = diagonal * 0.2, diagonal * 2.0

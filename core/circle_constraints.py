@@ -138,7 +138,7 @@ class CalculadorLimites:
         centro_x_max = x_max + margen_x
 
         # Centro Y: usar factor de altura máxima de la configuración
-        altura_minima_centro = y_max + altura_talud * 0.3  # Mínimo 30% arriba
+        altura_minima_centro = y_min - altura_talud * 0.2  # Permitir centros más bajos
         altura_maxima_centro = y_max + altura_talud * configuracion.get(
             "factor_altura_maxima", 1.5
         )

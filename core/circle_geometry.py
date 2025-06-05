@@ -337,7 +337,7 @@ def generar_circulos_candidatos(perfil_terreno: List[Tuple[float, float]],
     
     # Rangos para centro
     centros_x = np.linspace(x_min - margen_x, x_max + margen_x, densidad)
-    centros_y = np.linspace(y_max, y_max + margen_y, densidad)
+    centros_y = np.linspace(y_min - margen_y, y_max + margen_y, densidad)
     
     # Rangos para radio
     diagonal_terreno = math.sqrt((x_max - x_min)**2 + (y_max - y_min)**2)
