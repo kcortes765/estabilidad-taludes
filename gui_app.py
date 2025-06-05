@@ -195,9 +195,80 @@ class SlopeStabilityApp:
             self.progress_bar.set(0.3)
             self.update_status("Validando parámetros...")
             
-            # Importar función wrapper
+            # Importar clases y funciones necesarias
+            from data.models import generar_perfil_simple, CirculoFalla
+            from core.circle_constraints import CalculadorLimites
             from gui_analysis import analizar_desde_gui
-            
+
+            # 1. Generar perfil del talud (similar a show_slope_geometry)
+            #    Consider using a shared utility if this logic is duplicated often.
+            try:
+                perfil_terreno = generar_perfil_simple(
+                    altura=params['altura'],
+                    angulo_grados=params['angulo_talud'],
+                    longitud_base=params.get('longitud_base_talud', 3 * params['altura']) # Default base if not specified
+                )
+            except Exception as e:
+                self.update_status(f"Error generando perfil para validación: {e}")
+                messagebox.showerror("Error Interno", f"No se pudo generar el perfil del talud para validación: {e}")
+                self.analysis_running = False
+                self.progress_bar.set(0)
+                return
+
+            # 2. Calcular límites geométricos basados en el perfil
+            calculador_limites = CalculadorLimites()
+            try:
+                limites_geometricos = calculador_limites.calcular_limites_desde_perfil(perfil_terreno)
+            except Exception as e:
+                self.update_status(f"Error calculando límites geométricos: {e}")
+                messagebox.showerror("Error Interno", f"No se pudo calcular los límites geométricos: {e}")
+                self.analysis_running = False
+                self.progress_bar.set(0)
+                return
+
+            # 3. Crear objeto CirculoFalla con parámetros de la GUI
+            circulo_actual = CirculoFalla(xc=params['centro_x'], 
+                                        yc=params['centro_y'], 
+                                        radio=params['radio'])
+
+            # 4. Validar y corregir el círculo
+            self.update_status("Validando geometría del círculo...")
+            resultado_validacion = calculador_limites.validar_y_corregir_circulo(
+                circulo_actual, 
+                limites_geometricos, 
+                corregir_automaticamente=True
+            )
+
+            if not resultado_validacion.es_valido:
+                if resultado_validacion.circulo_corregido:
+                    self.update_status("Círculo original inválido, aplicando corrección automática...")
+                    # Log violaciones para el usuario o desarrollador
+                    print(f"[INFO] Violaciones de círculo: {resultado_validacion.violaciones}")
+                    messagebox.showwarning("Corrección Automática", 
+                                           f"El círculo original era inválido y ha sido corregido.\nViolaciones: {'; '.join(resultado_validacion.violaciones)}\nSugerencias: {'; '.join(resultado_validacion.sugerencias)}")
+                    
+                    params['centro_x'] = resultado_validacion.circulo_corregido.xc
+                    params['centro_y'] = resultado_validacion.circulo_corregido.yc
+                    params['radio'] = resultado_validacion.circulo_corregido.radio
+                    
+                    # Actualizar visualmente los campos en ParameterPanel
+                    # Esto asume que ParameterPanel tiene un método para actualizar los campos del círculo.
+                    # Si no existe, este método necesitaría ser añadido a gui_components.py.
+                    if hasattr(self.parameter_panel, 'update_circle_entries'):
+                        self.parameter_panel.update_circle_entries(params['centro_x'], params['centro_y'], params['radio'])
+                    else:
+                        print("[WARN] ParameterPanel no tiene update_circle_entries. Los campos no se actualizarán visualmente.")
+                        self.update_status("Círculo corregido. Ejecute 'Mostrar Geometría' para ver cambios si no se reflejan.")
+                else:
+                    self.update_status(f"Error: Círculo inválido y no se pudo corregir. Violaciones: {resultado_validacion.violaciones}")
+                    messagebox.showerror("Error de Validación", 
+                                           f"El círculo de falla es inválido y no pudo ser corregido automáticamente.\nViolaciones: {'; '.join(resultado_validacion.violaciones)}\nSugerencias: {'; '.join(resultado_validacion.sugerencias)}")
+                    self.analysis_running = False
+                    self.progress_bar.set(0)
+                    return # Detener análisis
+            else:
+                self.update_status("Geometría del círculo validada.")
+
             self.progress_bar.set(0.5)
             self.update_status("Ejecutando análisis...")
             
