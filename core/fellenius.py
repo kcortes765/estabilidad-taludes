@@ -56,6 +56,36 @@ class ResultadoFellenius:
     detalles_calculo: Dict[str, Any]
 
 
+def _validar_parametros_fellenius(
+    circulo: CirculoFalla,
+    perfil_terreno: List[Tuple[float, float]],
+    estrato: Estrato,
+    nivel_freatico: Optional[List[Tuple[float, float]]],
+    num_dovelas: int,
+) -> None:
+    """Valida los parámetros básicos del análisis de Fellenius."""
+
+    if not isinstance(circulo, CirculoFalla):
+        raise ValidacionError("'circulo' debe ser instancia de CirculoFalla")
+
+    if not isinstance(perfil_terreno, list) or len(perfil_terreno) < 2:
+        raise ValidacionError(
+            "'perfil_terreno' debe ser una lista con al menos 2 puntos"
+        )
+
+    if not isinstance(estrato, Estrato):
+        raise ValidacionError("'estrato' debe ser instancia de Estrato")
+
+    if nivel_freatico is not None:
+        if not isinstance(nivel_freatico, list) or len(nivel_freatico) < 2:
+            raise ValidacionError(
+                "'nivel_freatico' debe ser una lista con al menos 2 puntos"
+            )
+
+    if not isinstance(num_dovelas, int) or num_dovelas < 3:
+        raise ValidacionError("'num_dovelas' debe ser un entero >= 3")
+
+
 def calcular_fuerza_resistente_dovela(dovela: Dovela) -> float:
     """
     Calcula la fuerza resistente de una dovela según Fellenius.
@@ -135,6 +165,14 @@ def analizar_fellenius(circulo: CirculoFalla,
     """
     advertencias = []
     detalles_calculo = {}
+
+    _validar_parametros_fellenius(
+        circulo,
+        perfil_terreno,
+        estrato,
+        nivel_freatico,
+        num_dovelas,
+    )
     
     # Validar entrada si se solicita
     if validar_entrada:

@@ -19,7 +19,7 @@ from dataclasses import dataclass
 from data.models import Estrato, Dovela, CirculoFalla
 from data.constants import TOLERANCIA_CONVERGENCIA_BISHOP, MAX_ITERACIONES_BISHOP
 from data.validation import (
-    validar_entrada_completa, validar_conjunto_dovelas, 
+    validar_entrada_completa, validar_conjunto_dovelas,
     validar_convergencia_bishop, validar_factor_seguridad,
     lanzar_si_invalido, ValidacionError
 )
@@ -59,6 +59,48 @@ class ResultadoBishop:
     es_valido: bool
     advertencias: List[str]
     detalles_calculo: Dict[str, Any]
+
+
+def _validar_parametros_bishop(
+    circulo: CirculoFalla,
+    perfil_terreno: List[Tuple[float, float]],
+    estrato: Estrato,
+    nivel_freatico: Optional[List[Tuple[float, float]]],
+    num_dovelas: int,
+    factor_inicial: float,
+    tolerancia: float,
+    max_iteraciones: int,
+) -> None:
+    """Valida los parámetros básicos del análisis de Bishop."""
+
+    if not isinstance(circulo, CirculoFalla):
+        raise ValidacionError("'circulo' debe ser instancia de CirculoFalla")
+
+    if not isinstance(perfil_terreno, list) or len(perfil_terreno) < 2:
+        raise ValidacionError(
+            "'perfil_terreno' debe ser una lista con al menos 2 puntos"
+        )
+
+    if not isinstance(estrato, Estrato):
+        raise ValidacionError("'estrato' debe ser instancia de Estrato")
+
+    if nivel_freatico is not None:
+        if not isinstance(nivel_freatico, list) or len(nivel_freatico) < 2:
+            raise ValidacionError(
+                "'nivel_freatico' debe ser una lista con al menos 2 puntos"
+            )
+
+    if not isinstance(num_dovelas, int) or num_dovelas < 3:
+        raise ValidacionError("'num_dovelas' debe ser un entero >= 3")
+
+    if factor_inicial <= 0:
+        raise ValidacionError("'factor_inicial' debe ser > 0")
+
+    if tolerancia <= 0:
+        raise ValidacionError("'tolerancia' debe ser > 0")
+
+    if max_iteraciones <= 0:
+        raise ValidacionError("'max_iteraciones' debe ser > 0")
 
 
 def calcular_m_alpha(dovela: Dovela, factor_seguridad: float) -> float:
@@ -212,7 +254,18 @@ def analizar_bishop(circulo: CirculoFalla,
     """
     advertencias = []
     detalles_calculo = {}
-    
+
+    _validar_parametros_bishop(
+        circulo,
+        perfil_terreno,
+        estrato,
+        nivel_freatico,
+        num_dovelas,
+        factor_inicial,
+        tolerancia,
+        max_iteraciones,
+    )
+
     # Validar entrada si se solicita
     if validar_entrada:
         validaciones = validar_entrada_completa(circulo, perfil_terreno, estrato, nivel_freatico)
