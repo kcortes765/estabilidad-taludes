@@ -13,7 +13,17 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from core.bishop import analizar_bishop
 from core.fellenius import analizar_fellenius
-from core.geometry import crear_perfil_simple
+from core.geometry import (
+    crear_perfil_simple,
+    crear_nivel_freatico,
+    validar_geometria_basica,
+)
+from core.circle_constraints import (
+    CalculadorLimites,
+    aplicar_limites_inteligentes,
+    validar_circulo_geometricamente,
+    detectar_tipo_talud_desde_angulo,
+)
 from data.models import CirculoFalla, Estrato
 
 def eval_caso_literatura_bishop():
@@ -272,6 +282,214 @@ def eval_factor_seguridad_ranges():
         print("❌ EVAL FALLIDO: Factores fuera de rangos esperados")
         return False
 
+
+def eval_geometria_basica_valida():
+    """EVAL 5: Validación de una geometría básica coherente"""
+    print("\n📊 EVAL 5: Geometría básica válida")
+    print("=" * 50)
+
+    valido = validar_geometria_basica(10.0, 30.0, 10.0, 20.0, 15.0)
+    if valido:
+        print("✅ EVAL PASADO: Geometría aceptada")
+        return True
+    else:
+        print("❌ EVAL FALLIDO: Geometría rechazada")
+        return False
+
+
+def eval_geometria_basica_invalida():
+    """EVAL 6: Detección de geometría básica incorrecta"""
+    print("\n📊 EVAL 6: Geometría básica inválida")
+    print("=" * 50)
+
+    valido = validar_geometria_basica(10.0, -5.0, 500.0, -20.0, 2.0)
+    if not valido:
+        print("✅ EVAL PASADO: Se detectó geometría inválida")
+        return True
+    else:
+        print("❌ EVAL FALLIDO: Se aceptó geometría errónea")
+        return False
+
+
+def eval_sensibilidad_cohesion():
+    """EVAL 7: El FS aumenta con la cohesión"""
+    print("\n📊 EVAL 7: Sensibilidad a la cohesión")
+    print("=" * 50)
+
+    perfil = crear_perfil_simple(0.0, 0.0, 20.0, 10.0)
+    circulo = CirculoFalla(xc=10.0, yc=5.0, radio=15.0)
+
+    estrato1 = Estrato(cohesion=5.0, phi_grados=10.0, gamma=18.0)
+    estrato2 = Estrato(cohesion=15.0, phi_grados=10.0, gamma=18.0)
+
+    fs1 = analizar_bishop(circulo, perfil, estrato1, 6).factor_seguridad
+    fs2 = analizar_bishop(circulo, perfil, estrato2, 6).factor_seguridad
+
+    print(f"  FS cohesion baja:  {fs1:.3f}")
+    print(f"  FS cohesion alta:  {fs2:.3f}")
+
+    if fs2 > fs1:
+        print("✅ EVAL PASADO: FS aumenta con la cohesión")
+        return True
+    else:
+        print("❌ EVAL FALLIDO: FS no respondió a la cohesión")
+        return False
+
+
+def eval_sensibilidad_phi():
+    """EVAL 8: El FS aumenta con el ángulo de fricción"""
+    print("\n📊 EVAL 8: Sensibilidad al ángulo φ")
+    print("=" * 50)
+
+    perfil = crear_perfil_simple(0.0, 0.0, 20.0, 10.0)
+    circulo = CirculoFalla(xc=10.0, yc=5.0, radio=15.0)
+
+    estrato1 = Estrato(cohesion=10.0, phi_grados=5.0, gamma=18.0)
+    estrato2 = Estrato(cohesion=10.0, phi_grados=15.0, gamma=18.0)
+
+    fs1 = analizar_bishop(circulo, perfil, estrato1, 6).factor_seguridad
+    fs2 = analizar_bishop(circulo, perfil, estrato2, 6).factor_seguridad
+
+    print(f"  FS phi=5°:   {fs1:.3f}")
+    print(f"  FS phi=15°:  {fs2:.3f}")
+
+    if fs2 > fs1:
+        print("✅ EVAL PASADO: FS aumenta con el ángulo de fricción")
+        return True
+    else:
+        print("❌ EVAL FALLIDO: FS no cambió con el ángulo")
+        return False
+
+
+def eval_inestabilidad_extrema_fellenius():
+    """EVAL 9: Inestabilidad con c=0 y φ=0"""
+    print("\n📊 EVAL 9: Inestabilidad extrema Fellenius")
+    print("=" * 50)
+
+    perfil = crear_perfil_simple(0.0, 0.0, 20.0, 10.0)
+    circulo = CirculoFalla(xc=10.0, yc=5.0, radio=15.0)
+    estrato = Estrato(cohesion=0.0, phi_grados=0.0, gamma=18.0)
+
+    fs = analizar_fellenius(circulo, perfil, estrato, 6).factor_seguridad
+    print(f"  FS calculado: {fs:.3f}")
+
+    if fs < 1.0:
+        print("✅ EVAL PASADO: FS < 1 confirma inestabilidad")
+        return True
+    else:
+        print("❌ EVAL FALLIDO: FS >= 1 pese a condiciones críticas")
+        return False
+
+
+def eval_limites_geometricos_basicos():
+    """EVAL 10: Orden correcto de límites geométricos"""
+    print("\n📊 EVAL 10: Límites geométricos")
+    print("=" * 50)
+
+    perfil = crear_perfil_simple(0.0, 0.0, 20.0, 10.0)
+    limites = CalculadorLimites().calcular_limites_desde_perfil(perfil)
+
+    checks = [
+        limites.centro_x_min < limites.centro_x_max,
+        limites.centro_y_min < limites.centro_y_max,
+        limites.radio_min < limites.radio_max,
+    ]
+
+    if all(checks):
+        print("✅ EVAL PASADO: Límites correctamente ordenados")
+        return True
+    else:
+        print("❌ EVAL FALLIDO: Incongruencia en los límites")
+        return False
+
+
+def eval_generacion_circulos_limites():
+    """EVAL 11: Generación de círculos dentro de límites"""
+    print("\n📊 EVAL 11: Generar círculos")
+    print("=" * 50)
+
+    perfil = crear_perfil_simple(0.0, 0.0, 20.0, 10.0)
+    calc = CalculadorLimites()
+    limites = calc.calcular_limites_desde_perfil(perfil)
+    circulos = calc.generar_circulos_dentro_limites(limites, cantidad=5)
+
+    dentro = [
+        limites.centro_x_min <= c.xc <= limites.centro_x_max and
+        limites.centro_y_min <= c.yc <= limites.centro_y_max and
+        limites.radio_min <= c.radio <= limites.radio_max
+        for c in circulos
+    ]
+
+    if all(dentro) and len(circulos) == 5:
+        print("✅ EVAL PASADO: Todos los círculos cumplen los límites")
+        return True
+    else:
+        print("❌ EVAL FALLIDO: Algunos círculos están fuera de límites")
+        return False
+
+
+def eval_detectar_tipo_talud():
+    """EVAL 12: Clasificación automática del talud"""
+    print("\n📊 EVAL 12: Detección de tipo de talud")
+    print("=" * 50)
+
+    tipos = [
+        detectar_tipo_talud_desde_angulo(10),
+        detectar_tipo_talud_desde_angulo(25),
+        detectar_tipo_talud_desde_angulo(40),
+        detectar_tipo_talud_desde_angulo(60),
+    ]
+
+    esperado = [
+        "talud_suave",
+        "talud_empinado",
+        "talud_critico",
+        "talud_conservador",
+    ]
+
+    if tipos == esperado:
+        print("✅ EVAL PASADO: Tipos correctamente detectados")
+        return True
+    else:
+        print(f"❌ EVAL FALLIDO: {tipos} != {esperado}")
+        return False
+
+
+def eval_validacion_circulo_simple():
+    """EVAL 13: Validación geométrica de un círculo"""
+    print("\n📊 EVAL 13: Validar círculo simple")
+    print("=" * 50)
+
+    perfil = crear_perfil_simple(0.0, 0.0, 20.0, 10.0)
+    limites = aplicar_limites_inteligentes(perfil, "talud_empinado")
+    circulo = CirculoFalla(xc=limites.centro_x_min + 1,
+                           yc=limites.centro_y_min + 1,
+                           radio=limites.radio_min + 1)
+
+    res = validar_circulo_geometricamente(circulo, limites)
+    if res.es_valido:
+        print("✅ EVAL PASADO: Círculo válido según límites")
+        return True
+    else:
+        print(f"❌ EVAL FALLIDO: {res.violaciones}")
+        return False
+
+
+def eval_perfil_y_nivel_freatico():
+    """EVAL 14: Generación de nivel freático coherente"""
+    print("\n📊 EVAL 14: Nivel freático")
+    print("=" * 50)
+
+    perfil = crear_perfil_simple(0.0, 0.0, 20.0, 10.0, num_puntos=5)
+    nf = crear_nivel_freatico(3.0, perfil)
+
+    if len(nf) == 20 and all(abs(y - 3.0) < 1e-6 for _, y in nf):
+        print("✅ EVAL PASADO: Nivel freático creado correctamente")
+        return True
+    else:
+        print("❌ EVAL FALLIDO: Nivel freático incorrecto")
+        return False
+
 def ejecutar_evals_completos():
     """Ejecutar todos los evals geotécnicos"""
     print("🔬 EVALUACIONES GEOTÉCNICAS REALES")
@@ -283,7 +501,17 @@ def ejecutar_evals_completos():
         eval_caso_literatura_bishop,
         eval_fellenius_vs_bishop_diferencia,
         eval_convergencia_bishop,
-        eval_factor_seguridad_ranges
+        eval_factor_seguridad_ranges,
+        eval_geometria_basica_valida,
+        eval_geometria_basica_invalida,
+        eval_sensibilidad_cohesion,
+        eval_sensibilidad_phi,
+        eval_inestabilidad_extrema_fellenius,
+        eval_limites_geometricos_basicos,
+        eval_generacion_circulos_limites,
+        eval_detectar_tipo_talud,
+        eval_validacion_circulo_simple,
+        eval_perfil_y_nivel_freatico,
     ]
     
     resultados = []
