@@ -623,12 +623,23 @@ class SlopeStabilityApp:
     
     def show_about(self):
         """Mostrar información sobre la aplicación."""
-        messagebox.showinfo("Acerca de", 
+        messagebox.showinfo("Acerca de",
                           "Análisis de Estabilidad de Taludes\n\n"
                           "Versión: 1.0\n"
                           "Métodos: Bishop Modificado y Fellenius\n"
                           "Desarrollado para análisis geotécnico profesional\n\n"
                           " 2024 Sistema de Análisis de Estabilidad")
+
+    def clear_results(self):
+        """Restablecer resultados y gráficos."""
+        self.current_bishop_result = None
+        self.current_fellenius_result = None
+        if hasattr(self, "results_panel"):
+            self.results_panel.update_results()
+        if hasattr(self, "plotting_panel"):
+            self.plotting_panel.clear_all_plots()
+        self.progress_bar.set(0)
+        self.update_status("Resultados limpiados")
     
     def _show_circle_correction_info(self, resultado):
         """Mostrar información sobre corrección automática de círculos."""
