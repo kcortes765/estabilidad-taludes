@@ -74,12 +74,13 @@ class CalculadorLimites:
 
     def __init__(self):
         # Factores de seguridad para límites
-        self.factor_margen_lateral = 0.6  # 60% del ancho como margen lateral
-        self.factor_altura_minima = 1.2  # 120% de altura mínima sobre terreno
-        self.factor_altura_maxima = 3.0  # 300% de altura máxima sobre terreno
-        self.factor_radio_min = 0.15  # 15% de diagonal como radio mínimo
-        self.factor_radio_max = 2.5  # 250% de diagonal como radio máximo
-        self.cobertura_minima = 0.3  # 30% cobertura mínima del talud
+        # Valores menos restrictivos para un área de búsqueda amplia
+        self.factor_margen_lateral = 1.0  # 100% del alto como margen lateral
+        self.factor_altura_minima = 0.1  # Centro al menos 10% por encima
+        self.factor_altura_maxima = 4.0  # Hasta 400% por encima del talud
+        self.factor_radio_min = 0.3  # 30% de la altura como radio mínimo
+        self.factor_radio_max = 3.0  # 300% de la altura como radio máximo
+        self.cobertura_minima = 0.2  # Cobertura mínima más laxa
 
     def calcular_limites_desde_perfil(
         self,
@@ -133,31 +134,39 @@ class CalculadorLimites:
         # LÍMITES INTELIGENTES BASADOS EN GEOMETRÍA REAL Y CONFIGURACIÓN
 
         # Centro X: usar factor de margen lateral de la configuración
-        margen_x = altura_talud * configuracion.get("factor_margen_lateral", 0.6)
+        margen_x = altura_talud * configuracion.get(
+            "factor_margen_lateral", self.factor_margen_lateral
+        )
         centro_x_min = x_min - margen_x
         centro_x_max = x_max + margen_x
 
-        # Centro Y: usar factor de altura máxima de la configuración
-        altura_minima_centro = y_max + altura_talud * 0.3  # Mínimo 30% arriba
+        # Centro Y: usar factores de altura mínima y máxima de la configuración
+        altura_minima_centro = y_max + altura_talud * configuracion.get(
+            "factor_altura_minima", self.factor_altura_minima
+        )
         altura_maxima_centro = y_max + altura_talud * configuracion.get(
-            "factor_altura_maxima", 1.5
+            "factor_altura_maxima", self.factor_altura_maxima
         )
         centro_y_min = altura_minima_centro
         centro_y_max = altura_maxima_centro
 
-        # Radio: usar factor de radio máximo de la configuración
-        radio_min = altura_talud * 0.8  # Mínimo 80% de la altura
-        radio_max = altura_talud * configuracion.get("factor_radio_max", 1.5)
+        # Radio: usar factores mínimo y máximo configurables
+        radio_min = altura_talud * configuracion.get(
+            "factor_radio_min", self.factor_radio_min
+        )
+        radio_max = altura_talud * configuracion.get(
+            "factor_radio_max", self.factor_radio_max
+        )
 
         print(f"🎯 LÍMITES CALCULADOS:")
         print(
             f"   Centro X: [{centro_x_min:.2f}, {centro_x_max:.2f}] (margen: ±{margen_x:.2f})"
         )
         print(
-            f"   Centro Y: [{centro_y_min:.2f}, {centro_y_max:.2f}] (altura talud + {altura_talud*0.3:.2f} a +{altura_talud*configuracion.get('factor_altura_maxima', 1.5):.2f})"
+            f"   Centro Y: [{centro_y_min:.2f}, {centro_y_max:.2f}] (altura talud + {altura_talud*configuracion.get('factor_altura_minima', self.factor_altura_minima):.2f} a +{altura_talud*configuracion.get('factor_altura_maxima', self.factor_altura_maxima):.2f})"
         )
         print(
-            f"   Radio: [{radio_min:.2f}, {radio_max:.2f}] ({altura_talud*0.8:.2f}H a {altura_talud*configuracion.get('factor_radio_max', 1.5):.2f}H)"
+            f"   Radio: [{radio_min:.2f}, {radio_max:.2f}] ({altura_talud*configuracion.get('factor_radio_min', self.factor_radio_min):.2f}H a {altura_talud*configuracion.get('factor_radio_max', self.factor_radio_max):.2f}H)"
         )
 
         return LimitesGeometricos(
@@ -358,27 +367,35 @@ def crear_limites_predefinidos() -> Dict[str, Dict[str, float]]:
 
     return {
         "talud_suave": {
-            "factor_margen_lateral": 0.8,  # Más margen lateral para taludes suaves
-            "factor_altura_maxima": 2.0,  # Centro más alto permitido
-            "factor_radio_max": 2.0,  # Radios más grandes permitidos
-            "cobertura_minima": 0.25,  # Menos cobertura requerida
+            "factor_margen_lateral": 1.2,
+            "factor_altura_minima": 0.05,
+            "factor_altura_maxima": 4.0,
+            "factor_radio_min": 0.2,
+            "factor_radio_max": 3.0,
+            "cobertura_minima": 0.25,
         },
         "talud_empinado": {
-            "factor_margen_lateral": 0.5,
-            "factor_altura_maxima": 2.5,
-            "factor_radio_max": 1.8,
+            "factor_margen_lateral": 1.0,
+            "factor_altura_minima": 0.1,
+            "factor_altura_maxima": 3.5,
+            "factor_radio_min": 0.3,
+            "factor_radio_max": 2.5,
             "cobertura_minima": 0.4,
         },
         "talud_critico": {
-            "factor_margen_lateral": 0.3,
-            "factor_altura_maxima": 2.0,
-            "factor_radio_max": 1.5,
+            "factor_margen_lateral": 0.7,
+            "factor_altura_minima": 0.1,
+            "factor_altura_maxima": 3.0,
+            "factor_radio_min": 0.3,
+            "factor_radio_max": 2.0,
             "cobertura_minima": 0.5,
         },
         "talud_conservador": {
-            "factor_margen_lateral": 0.2,
-            "factor_altura_maxima": 1.5,
-            "factor_radio_max": 1.2,
+            "factor_margen_lateral": 0.5,
+            "factor_altura_minima": 0.2,
+            "factor_altura_maxima": 2.5,
+            "factor_radio_min": 0.5,
+            "factor_radio_max": 1.5,
             "cobertura_minima": 0.6,
         },
     }
