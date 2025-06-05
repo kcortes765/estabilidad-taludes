@@ -10,8 +10,6 @@ import math
 
 # Agregar path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-
-)
 from core.circle_constraints import (
     CalculadorLimites,
     aplicar_limites_inteligentes,
@@ -21,6 +19,15 @@ from core.circle_constraints import (
 from data.models import CirculoFalla, Estrato
 from gui_components import ParameterPanel, ResultsPanel
 from gui_plotting import PlottingPanel
+
+# Importar funciones de cálculo y utilidades del paquete core
+from core import (
+    analizar_bishop,
+    analizar_fellenius,
+    crear_perfil_simple,
+    crear_nivel_freatico_horizontal as crear_nivel_freatico,
+)
+from core.geometry import validar_geometria_basica
 
 def eval_caso_literatura_bishop():
     """
