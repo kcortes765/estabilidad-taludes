@@ -396,9 +396,35 @@ class PlottingPanel(ctk.CTkFrame):
         # Actualizar canvas
         self.geom_canvas.draw()
     
-    def update_analysis(self, bishop_result=None, fellenius_result=None):
-        """Actualizar visualización con resultados del análisis - VERSIÓN PROFESIONAL"""
-        if not bishop_result:
+    def update_analysis(
+        self,
+        perfil_terreno=None,
+        circulo=None,
+        dovelas=None,
+        nivel_freatico=None,
+        bishop_result=None,
+        fellenius_result=None,
+    ):
+        """Actualizar visualización con resultados del análisis."""
+
+        # Permitir actualización de estado interno desde parámetros opcionales
+        if perfil_terreno is not None:
+            self.current_perfil = perfil_terreno
+
+        if circulo is not None:
+            self.current_circulo = circulo
+
+        if bishop_result is not None:
+            self.current_bishop_result = bishop_result
+
+        if fellenius_result is not None:
+            self.current_fellenius_result = fellenius_result
+
+        # Nivel freático asociado (si se provee)
+        if bishop_result is not None and nivel_freatico is not None:
+            bishop_result.nivel_freatico = nivel_freatico
+
+        if not self.current_bishop_result:
             return
         
         # Limpiar gráfico
@@ -440,8 +466,8 @@ class PlottingPanel(ctk.CTkFrame):
                             markersize=8, label=f'Centro ({self.current_circulo.xc:.1f}, {self.current_circulo.yc:.1f})')
         
         # === DIBUJAR DOVELAS NUMERADAS ===
-        if hasattr(bishop_result, 'dovelas') and bishop_result.dovelas:
-            for i, dovela in enumerate(bishop_result.dovelas):
+        if hasattr(self.current_bishop_result, 'dovelas') and self.current_bishop_result.dovelas:
+            for i, dovela in enumerate(self.current_bishop_result.dovelas):
                 # Color alternante para dovelas
                 color = 'lightblue' if i % 2 == 0 else 'lightcyan'
                 alpha = 0.7
@@ -473,11 +499,11 @@ class PlottingPanel(ctk.CTkFrame):
                                        linestyle='--', alpha=0.5, linewidth=1)
         
         # === INFORMACIÓN DEL FACTOR DE SEGURIDAD ===
-        fs_text = f"FS Crítico = {bishop_result.factor_seguridad:.3f}"
-        if bishop_result.factor_seguridad < 1.0:
+        fs_text = f"FS Crítico = {self.current_bishop_result.factor_seguridad:.3f}"
+        if self.current_bishop_result.factor_seguridad < 1.0:
             fs_color = 'red'
             fs_status = "INESTABLE"
-        elif bishop_result.factor_seguridad < 1.5:
+        elif self.current_bishop_result.factor_seguridad < 1.5:
             fs_color = 'orange'
             fs_status = "MARGINALMENTE ESTABLE"
         else:
@@ -485,15 +511,15 @@ class PlottingPanel(ctk.CTkFrame):
             fs_status = "ESTABLE"
         
         # Caja de información prominente
-        info_text = f"{fs_text}\nEstado: {fs_status}\nDovelas: {len(bishop_result.dovelas)}"
+        info_text = f"{fs_text}\nEstado: {fs_status}\nDovelas: {len(self.current_bishop_result.dovelas)}"
         self.geom_ax.text(0.02, 0.98, info_text, transform=self.geom_ax.transAxes,
                          fontsize=12, fontweight='bold', va='top', ha='left',
                          bbox=dict(boxstyle="round,pad=0.5", facecolor=fs_color, alpha=0.8, edgecolor='black'),
                          color='white')
         
         # === NIVEL FREÁTICO (si aplica) ===
-        if hasattr(bishop_result, 'nivel_freatico') and bishop_result.nivel_freatico:
-            y_freatico = bishop_result.nivel_freatico
+        if hasattr(self.current_bishop_result, 'nivel_freatico') and self.current_bishop_result.nivel_freatico:
+            y_freatico = self.current_bishop_result.nivel_freatico
             x_limits = self.geom_ax.get_xlim()
             self.geom_ax.axhline(y=y_freatico, color='cyan', linestyle='--', 
                                linewidth=2, alpha=0.7, label='Nivel freático')
